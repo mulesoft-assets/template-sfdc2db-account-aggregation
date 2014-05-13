@@ -9,12 +9,6 @@ import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.transformer.AbstractMessageTransformer;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Maps.EntryTransformer;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
-
 /**
  * This transformer will take two lists as input and create a third one that
  * will be the merge of the previous two. The identity of list's element is
