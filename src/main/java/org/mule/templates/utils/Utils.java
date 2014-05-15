@@ -1,4 +1,4 @@
-package org.mule.templates.transformers;
+package org.mule.templates.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

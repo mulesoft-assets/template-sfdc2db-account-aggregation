@@ -1,11 +1,11 @@
-package org.mule.templates.transformers;
+package org.mule.templates.utils;
 
 /**
  * 
  * @author martin
  *
  */
-interface Keys {
+public interface VariableNames {
 
 	String ID_IN_A = "IDInA";
 	

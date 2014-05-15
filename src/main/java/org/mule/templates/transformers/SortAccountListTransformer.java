@@ -8,6 +8,8 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
+import org.mule.templates.utils.VariableNames;
+import org.mule.templates.utils.Utils;
 import org.mule.transformer.AbstractMessageTransformer;
 
 /**
@@ -32,16 +34,16 @@ public final class SortAccountListTransformer extends AbstractMessageTransformer
 		private String buildKey(Map<String, String> user) {
 			StringBuilder key = new StringBuilder();
 
-			if (StringUtils.isNotBlank(user.get(Keys.ID_IN_A)) && StringUtils.isNotBlank(user.get(Keys.ID_IN_B))) {
-				key.append("~~~").append(user.get(Keys.IDENTITY_FIELD_KEY));
+			if (StringUtils.isNotBlank(user.get(VariableNames.ID_IN_A)) && StringUtils.isNotBlank(user.get(VariableNames.ID_IN_B))) {
+				key.append("~~~").append(user.get(VariableNames.IDENTITY_FIELD_KEY));
 			}
 
-			if (StringUtils.isNotBlank(user.get(Keys.ID_IN_A)) && StringUtils.isBlank(user.get(Keys.ID_IN_B))) {
-				key.append("~").append(user.get(Keys.IDENTITY_FIELD_KEY));
+			if (StringUtils.isNotBlank(user.get(VariableNames.ID_IN_A)) && StringUtils.isBlank(user.get(VariableNames.ID_IN_B))) {
+				key.append("~").append(user.get(VariableNames.IDENTITY_FIELD_KEY));
 			}
 
-			if (StringUtils.isBlank(user.get(Keys.ID_IN_A)) && StringUtils.isNotBlank(user.get(Keys.ID_IN_B))) {
-				key.append("~~").append(user.get(Keys.IDENTITY_FIELD_KEY));
+			if (StringUtils.isBlank(user.get(VariableNames.ID_IN_A)) && StringUtils.isNotBlank(user.get(VariableNames.ID_IN_B))) {
+				key.append("~~").append(user.get(VariableNames.IDENTITY_FIELD_KEY));
 			}
 
 			return key.toString();

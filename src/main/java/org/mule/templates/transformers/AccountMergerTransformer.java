@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
+import org.mule.templates.utils.VariableNames;
+import org.mule.templates.utils.Utils;
 import org.mule.transformer.AbstractMessageTransformer;
 
 /**
@@ -24,8 +26,8 @@ public final class AccountMergerTransformer extends AbstractMessageTransformer {
 	@Override
 	public Object transformMessage(MuleMessage message, String outputEncoding) throws TransformerException {
 		List<Map<String, String>> mergedAccountsList = mergeList(
-				Utils.buildList(message, Keys.ACCOUNTS_COMPANY_A),
-				Utils.buildList(message, Keys.ACCOUNTS_COMPANY_B));
+				Utils.buildList(message, VariableNames.ACCOUNTS_COMPANY_A),
+				Utils.buildList(message, VariableNames.ACCOUNTS_COMPANY_B));
 
 		return mergedAccountsList;
 	}
@@ -45,24 +47,24 @@ public final class AccountMergerTransformer extends AbstractMessageTransformer {
 		// Put all accounts from A in the merged contactList
 		for (Map<String, String> accountFromA : accountsFromOrgA) {
 			Map<String, String> mergedAccount = createMergedAccount(accountFromA);
-			mergedAccount.put(Keys.ID_IN_A, accountFromA.get(Keys.ID));
-			mergedAccount.put(Keys.INDUSTRY_IN_A, accountFromA.get(Keys.INDUSTRY));
-			mergedAccount.put(Keys.NUMBER_OF_EMPLOYEES_IN_A, accountFromA.get(Keys.NUMBER_OF_EMPLOYEES));
+			mergedAccount.put(VariableNames.ID_IN_A, accountFromA.get(VariableNames.ID));
+			mergedAccount.put(VariableNames.INDUSTRY_IN_A, accountFromA.get(VariableNames.INDUSTRY));
+			mergedAccount.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_A, accountFromA.get(VariableNames.NUMBER_OF_EMPLOYEES));
 			mergedAccountList.add(mergedAccount);
 		}
 
 		// Add the new accounts from B and update the exiting ones
 		for (Map<String, String> accountFromB : accountsFromOrgB) {
-			Map<String, String> accountFromA = findAccountInList(accountFromB.get(Keys.IDENTITY_FIELD_KEY), mergedAccountList);
+			Map<String, String> accountFromA = findAccountInList(accountFromB.get(VariableNames.IDENTITY_FIELD_KEY), mergedAccountList);
 			if (accountFromA != null) {
-				accountFromA.put(Keys.ID_IN_B, accountFromB.get(Keys.ID));
-				accountFromA.put(Keys.INDUSTRY_IN_B, accountFromB.get(Keys.INDUSTRY));
-				accountFromA.put(Keys.NUMBER_OF_EMPLOYEES_IN_B, accountFromB.get(Keys.NUMBER_OF_EMPLOYEES));
+				accountFromA.put(VariableNames.ID_IN_B, accountFromB.get(VariableNames.ID));
+				accountFromA.put(VariableNames.INDUSTRY_IN_B, accountFromB.get(VariableNames.INDUSTRY));
+				accountFromA.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_B, accountFromB.get(VariableNames.NUMBER_OF_EMPLOYEES));
 			} else {
 				Map<String, String> mergedAccount = createMergedAccount(accountFromB);
-				mergedAccount.put(Keys.ID_IN_B, accountFromB.get(Keys.ID));
-				mergedAccount.put(Keys.INDUSTRY_IN_B, accountFromB.get(Keys.INDUSTRY));
-				mergedAccount.put(Keys.NUMBER_OF_EMPLOYEES_IN_B, accountFromB.get(Keys.NUMBER_OF_EMPLOYEES));
+				mergedAccount.put(VariableNames.ID_IN_B, accountFromB.get(VariableNames.ID));
+				mergedAccount.put(VariableNames.INDUSTRY_IN_B, accountFromB.get(VariableNames.INDUSTRY));
+				mergedAccount.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_B, accountFromB.get(VariableNames.NUMBER_OF_EMPLOYEES));
 				mergedAccountList.add(mergedAccount);
 			}
 
@@ -72,19 +74,19 @@ public final class AccountMergerTransformer extends AbstractMessageTransformer {
 
 	private static Map<String, String> createMergedAccount(Map<String, String> account) {
 		Map<String, String> mergedAccount = new HashMap<String, String>();
-		mergedAccount.put(Keys.IDENTITY_FIELD_KEY, account.get(Keys.IDENTITY_FIELD_KEY));
-		mergedAccount.put(Keys.ID_IN_A, EMPTY);
-		mergedAccount.put(Keys.INDUSTRY_IN_A, EMPTY);
-		mergedAccount.put(Keys.NUMBER_OF_EMPLOYEES_IN_A, EMPTY);
-		mergedAccount.put(Keys.ID_IN_B, EMPTY);
-		mergedAccount.put(Keys.INDUSTRY_IN_B, EMPTY);
-		mergedAccount.put(Keys.NUMBER_OF_EMPLOYEES_IN_B, EMPTY);
+		mergedAccount.put(VariableNames.IDENTITY_FIELD_KEY, account.get(VariableNames.IDENTITY_FIELD_KEY));
+		mergedAccount.put(VariableNames.ID_IN_A, EMPTY);
+		mergedAccount.put(VariableNames.INDUSTRY_IN_A, EMPTY);
+		mergedAccount.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_A, EMPTY);
+		mergedAccount.put(VariableNames.ID_IN_B, EMPTY);
+		mergedAccount.put(VariableNames.INDUSTRY_IN_B, EMPTY);
+		mergedAccount.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_B, EMPTY);
 		return mergedAccount;
 	}
 
 	private static Map<String, String> findAccountInList(String accountName, List<Map<String, String>> accountList) {
 		for (Map<String, String> account : accountList) {
-			if (account.get(Keys.IDENTITY_FIELD_KEY).equals(accountName)) {
+			if (account.get(VariableNames.IDENTITY_FIELD_KEY).equals(accountName)) {
 				return account;
 			}
 		}
