@@ -33,7 +33,14 @@ Simple steps to get sfdc2db-account-aggregation running.
 **Note:** This particular Anypoint Template illustrate the aggregation use case between SalesForce and a Database, thus it requires a DB instance to work.
 The Anypoint Template comes package with a MySQL script to create the DB table that uses. 
 It is the user responsibility to use that script to create the table in an available schema and change the configuration accordingly.
-The SQL script file can be found in [src/main/resources/sfdc2jdbc.sql] (../master/src/main/resources/sfdc2jdbc.sql)
+The SQL script file can be found in [src/main/resources/sfdc2jdbc.sql](../master/src/main/resources/sfdc2jdbc.sql)
+
+This template is customized for MySQL. To use it with different SQL implementation, some changes are necessary:
+
+* update SQL script dialect to desired one
+* replace MySQL driver library dependency to desired one in [POM](pom.xml)
+* replace attribute `driverClassName` of `db:generic-config` element with class name of desired JDBC driver in [src/main/app/config.xml](../master/src/main/app/config.xml)
+* update JDBC URL in `mule.*.properties` file
 
 ## Running on CloudHub <a name="runoncloudhub"/>
 
@@ -46,7 +53,7 @@ Mule Studio provides you with really easy way to deploy your Template directly t
 
 
 ## Running on premise <a name="runonopremise"/>
-Complete all properties in one of the property files, for example in [mule.prod.properties] (../blob/master/src/main/resources/mule.prod.properties) and run your app with the corresponding environment variable to use it. To follow the example, this will be `mule.env=prod`.
+Complete all properties in one of the property files, for example in [mule.prod.properties](../blob/master/src/main/resources/mule.prod.properties) and run your app with the corresponding environment variable to use it. To follow the example, this will be `mule.env=prod`.
 
 After this, to trigger the use case you just need to hit the local HTTP endpoint with the port you configured in your file. If this is, for instance, `9090` then you should hit: `http://localhost:9090/generatereport` and this will create a CSV report and send it to the mails set.
 
@@ -64,7 +71,6 @@ In order to use this Mule Template you need to configure properties (Credentials
 
 #### SalesForce Connector configuration for company B
 + db.jdbcUrl `jdbc:mysql://localhost:3306/mule?user=joan.baez&password=JoanBaez456`
-+ db.driverClass `com.mysql.jdbc.Driver`
 
 #### SMPT Services configuration
 + smtp.host `smtp.gmail.com`
