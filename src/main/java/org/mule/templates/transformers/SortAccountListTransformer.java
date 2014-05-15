@@ -21,6 +21,7 @@ public final class SortAccountListTransformer extends AbstractMessageTransformer
 	
 	private static final Comparator<Map<String, String>> ACCOUNT_MAP_COMPARATOR = new Comparator<Map<String, String>>() {
 
+		@Override
 		public int compare(Map<String, String> user1, Map<String, String> user2) {
 			String key1 = buildKey(user1);
 			String key2 = buildKey(user2);

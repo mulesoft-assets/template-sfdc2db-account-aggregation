@@ -4,10 +4,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.templates</groupId>
-	<artifactId>template-sfdc2sfdc-account-aggregation</artifactId>
+	<artifactId>template-sfdc2db-account-aggregation</artifactId>
 	<packaging>mule</packaging>
 	<version>1.0.0</version>
-	<name>sfdc2sfdc-account-aggregation Mule Template Project</name>
+	<name>sfdc2db-account-aggregation Mule Template Project</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
