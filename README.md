@@ -63,13 +63,13 @@ In order to use this Mule Template you need to configure properties (Credentials
 ### Application configuration
 + http.port `9090` 
 
-#### SalesForce Connector configuration for company A
-+ sfdc.username `bob.dylan@orga`
+#### SalesForce Connector configuration
++ sfdc.username `bob.dylan@org`
 + sfdc.password `DylanPassword123`
 + sfdc.securityToken `avsfwCUl7apQs56Xq2AKi3X`
 + sfdc.url `https://login.salesforce.com/services/Soap/u/26.0`
 
-#### SalesForce Connector configuration for company B
+#### Database Connector configuration
 + db.jdbcUrl `jdbc:mysql://localhost:3306/mule?user=joan.baez&password=JoanBaez456`
 
 #### SMPT Services configuration
@@ -134,14 +134,14 @@ Mainly consisting of two calls (Queries) to SalesForce and storing each response
 Criteria and format applied:
 + Transformer receives a Mule Message with the two Invocation variables *accountsFromOrgA* and *accountsFromOrgB* to result in List of Maps with keys: **Name**, **IDInA**, **IndustryInA**, **NumberOfEmployeesInA**, **IDInB**, **IndustryInB**, **numberOfEmployeesInB**.
 
-+ Accounts will be matched by Name, that is to say, a record in both organizations with same Name is considered the same account.
++ Accounts will be matched by Name, that is to say, a record in both instances with same Name is considered the same account.
 
 ###  Format Output Flow
 + [Java Transformer](http://www.mulesoft.org/documentation/display/current/Java+Transformer+Reference) responsible for sorting the list of users in the following order:
 
-1. Accounts only in Org A
-2. Accounts only in Org B
-3. Accounts in both Org A and Org B
+1. Accounts only in Salesforce
+2. Accounts only in Database
+3. Accounts in both Salesforce and Database
 
 All records ordered alphabetically by name within each category.
 If you want to change this order then the *compare* method should be modified.
