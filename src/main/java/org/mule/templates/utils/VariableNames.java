@@ -7,21 +7,21 @@ package org.mule.templates.utils;
  */
 public interface VariableNames {
 
-	String ID_IN_A = "IDInA";
+	String ID_IN_SALESFORCE = "IDInSalesforce";
 	
-	String ID_IN_B = "IDInB";
+	String ID_IN_DATABASE = "IDInDatabase";
 	
-	String NUMBER_OF_EMPLOYEES_IN_A = "NumberOfEmployeesInA";
+	String NUMBER_OF_EMPLOYEES_IN_SALESFORCE = "NumberOfEmployeesInSalesforce";
 
-	String NUMBER_OF_EMPLOYEES_IN_B = "NumberOfEmployeesInB";
+	String NUMBER_OF_EMPLOYEES_IN_DATABASE = "NumberOfEmployeesInDatabase";
 
-	String INDUSTRY_IN_A = "IndustryInA";
+	String INDUSTRY_IN_SALESFORCE = "IndustryInSalesforce";
 
-	String INDUSTRY_IN_B = "IndustryInB";
+	String INDUSTRY_IN_DATABASE = "IndustryInDatabase";
 
-	String ACCOUNTS_COMPANY_A = "accountsFromOrgA";
+	String ACCOUNTS_FROM_SALESFORCE = "accountsFromSalesforce";
 
-	String ACCOUNTS_COMPANY_B = "accountsFromOrgB";
+	String ACCOUNTS_FROM_DATABASE = "accountsFromDatabase";
 
 	String ID = "Id";
 	
@@ -30,5 +30,7 @@ public interface VariableNames {
 	String NUMBER_OF_EMPLOYEES = "NumberOfEmployees";
 
 	String INDUSTRY = "Industry";
+
+	public static final String NAME = "Name";
 
 }

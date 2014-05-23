@@ -16,6 +16,7 @@ import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.templates.utils.Utils;
+import org.mule.templates.utils.VariableNames;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SortAccountListTransformerTest {
@@ -36,25 +37,25 @@ public class SortAccountListTransformerTest {
 
 	private List<Map<String, String>> createExpectedList() {
 		Map<String, String> record0 = new HashMap<String, String>();
-		record0.put("IDInA", "0");
-		record0.put("IDInB", "");
-		record0.put("Name", "SomeName_0");
-		record0.put("IndustryInA", "industry_0_A");
-		record0.put("IndustryInB", "");
+		record0.put(VariableNames.ID_IN_SALESFORCE, "0");
+		record0.put(VariableNames.ID_IN_DATABASE, "");
+		record0.put(VariableNames.NAME, "SomeName_0");
+		record0.put(VariableNames.INDUSTRY_IN_SALESFORCE, "industry_0_Salesforce");
+		record0.put(VariableNames.INDUSTRY_IN_DATABASE, "");
 
 		Map<String, String> record1 = new HashMap<String, String>();
-		record1.put("IDInA", "1");
-		record1.put("IDInB", "1");
-		record1.put("Name", "SomeName_1");
-		record1.put("IndustryInA", "industry_1_A");
-		record1.put("IndustryInB", "industry_1_B");
+		record1.put(VariableNames.ID_IN_SALESFORCE, "1");
+		record1.put(VariableNames.ID_IN_DATABASE, "1");
+		record1.put(VariableNames.NAME, "SomeName_1");
+		record1.put(VariableNames.INDUSTRY_IN_SALESFORCE, "industry_1_Salesforce");
+		record1.put(VariableNames.INDUSTRY_IN_DATABASE, "industry_1_Database");
 
 		Map<String, String> record2 = new HashMap<String, String>();
-		record2.put("IDInA", "");
-		record2.put("IDInB", "2");
-		record2.put("Name", "SomeName_2");
-		record2.put("IndustryInA", "");
-		record2.put("IndustryInB", "industry_2_B");
+		record2.put(VariableNames.ID_IN_SALESFORCE, "");
+		record2.put(VariableNames.ID_IN_DATABASE, "2");
+		record2.put(VariableNames.NAME, "SomeName_2");
+		record2.put(VariableNames.INDUSTRY_IN_SALESFORCE, "");
+		record2.put(VariableNames.INDUSTRY_IN_DATABASE, "industry_2_Database");
 
 		List<Map<String, String>> expectedList = new ArrayList<Map<String, String>>();
 		expectedList.add(record0);
@@ -67,25 +68,25 @@ public class SortAccountListTransformerTest {
 
 	private List<Map<String, String>> createOriginalList() {
 		Map<String, String> record0 = new HashMap<String, String>();
-		record0.put("IDInA", "0");
-		record0.put("IDInB", "");
-		record0.put("Name", "SomeName_0");
-		record0.put("IndustryInA", "industry_0_A");
-		record0.put("IndustryInB", "");
+		record0.put(VariableNames.ID_IN_SALESFORCE, "0");
+		record0.put(VariableNames.ID_IN_DATABASE, "");
+		record0.put(VariableNames.NAME, "SomeName_0");
+		record0.put(VariableNames.INDUSTRY_IN_SALESFORCE, "industry_0_Salesforce");
+		record0.put(VariableNames.INDUSTRY_IN_DATABASE, "");
 
 		Map<String, String> record1 = new HashMap<String, String>();
-		record1.put("IDInA", "1");
-		record1.put("IDInB", "1");
-		record1.put("Name", "SomeName_1");
-		record1.put("IndustryInA", "industry_1_A");
-		record1.put("IndustryInB", "industry_1_B");
+		record1.put(VariableNames.ID_IN_SALESFORCE, "1");
+		record1.put(VariableNames.ID_IN_DATABASE, "1");
+		record1.put(VariableNames.NAME, "SomeName_1");
+		record1.put(VariableNames.INDUSTRY_IN_SALESFORCE, "industry_1_Salesforce");
+		record1.put(VariableNames.INDUSTRY_IN_DATABASE, "industry_1_Database");
 
 		Map<String, String> record2 = new HashMap<String, String>();
-		record2.put("IDInA", "");
-		record2.put("IDInB", "2");
-		record2.put("Name", "SomeName_2");
-		record2.put("IndustryInA", "");
-		record2.put("IndustryInB", "industry_2_B");
+		record2.put(VariableNames.ID_IN_SALESFORCE, "");
+		record2.put(VariableNames.ID_IN_DATABASE, "2");
+		record2.put(VariableNames.NAME, "SomeName_2");
+		record2.put(VariableNames.INDUSTRY_IN_SALESFORCE, "");
+		record2.put(VariableNames.INDUSTRY_IN_DATABASE, "industry_2_Database");
 
 		List<Map<String, String>> originalList = new ArrayList<Map<String, String>>();
 		originalList.add(record0);

@@ -34,15 +34,15 @@ public final class SortAccountListTransformer extends AbstractMessageTransformer
 		private String buildKey(Map<String, String> user) {
 			StringBuilder key = new StringBuilder();
 
-			if (StringUtils.isNotBlank(user.get(VariableNames.ID_IN_A)) && StringUtils.isNotBlank(user.get(VariableNames.ID_IN_B))) {
+			if (StringUtils.isNotBlank(user.get(VariableNames.ID_IN_SALESFORCE)) && StringUtils.isNotBlank(user.get(VariableNames.ID_IN_DATABASE))) {
 				key.append("~~~").append(user.get(VariableNames.IDENTITY_FIELD_KEY));
 			}
 
-			if (StringUtils.isNotBlank(user.get(VariableNames.ID_IN_A)) && StringUtils.isBlank(user.get(VariableNames.ID_IN_B))) {
+			if (StringUtils.isNotBlank(user.get(VariableNames.ID_IN_SALESFORCE)) && StringUtils.isBlank(user.get(VariableNames.ID_IN_DATABASE))) {
 				key.append("~").append(user.get(VariableNames.IDENTITY_FIELD_KEY));
 			}
 
-			if (StringUtils.isBlank(user.get(VariableNames.ID_IN_A)) && StringUtils.isNotBlank(user.get(VariableNames.ID_IN_B))) {
+			if (StringUtils.isBlank(user.get(VariableNames.ID_IN_SALESFORCE)) && StringUtils.isNotBlank(user.get(VariableNames.ID_IN_DATABASE))) {
 				key.append("~~").append(user.get(VariableNames.IDENTITY_FIELD_KEY));
 			}
 

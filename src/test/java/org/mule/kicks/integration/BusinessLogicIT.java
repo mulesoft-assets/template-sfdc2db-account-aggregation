@@ -18,6 +18,7 @@ import org.mule.AbstractTemplateTestCase;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleEvent;
 import org.mule.processor.chain.SubflowInterceptingChainLifecycleWrapper;
+import org.mule.templates.utils.VariableNames;
 import org.mule.util.UUID;
 
 import com.sforce.soap.partner.SaveResult;
@@ -32,11 +33,8 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 	private static final String TEMPLATE_NAME = "account-aggregation";
 	private static final String TEST_FLOWS_FOLDER_PATH = "./src/test/resources/flows/";
 
-	private static final String ACCOUNTS_FROM_ORG_A = "accountsFromOrgA";
-	private static final String ACCOUNTS_FROM_ORG_B = "accountsFromOrgB";
-
-	private List<Map<String, Object>> createdAccountsInA = new ArrayList<Map<String, Object>>();
-	private List<Map<String, Object>> createdAccountsInB = new ArrayList<Map<String, Object>>();
+	private List<Map<String, Object>> createdAccountsInSalesforce = new ArrayList<Map<String, Object>>();
+	private List<Map<String, Object>> createdAccountsInDatabase = new ArrayList<Map<String, Object>>();
 
 	@Before
 	public void setUp() throws Exception {
@@ -45,8 +43,8 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 
 	@After
 	public void tearDown() throws Exception {
-		deleteTestAccountFromSandBox(createdAccountsInA, "deleteAccountFromAFlow");
-		deleteTestAccountFromSandBox(createdAccountsInB, "deleteAccountFromBFlow");
+		deleteTestAccountFromSandBox(createdAccountsInSalesforce, "deleteAccountFromSalesforceFlow");
+		deleteTestAccountFromSandBox(createdAccountsInDatabase, "deleteAccountFromDatabaseFlow");
 	}
 
 	@Override
@@ -75,30 +73,30 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 	}
 
 	private void createAccounts() throws Exception {
-		SubflowInterceptingChainLifecycleWrapper flow = getSubFlow("createAccountInAFlow");
+		SubflowInterceptingChainLifecycleWrapper flow = getSubFlow("createAccountInSalesforceFlow");
 		flow.initialise();
 
 		Map<String, Object> accountA = new HashMap<String, Object>();
-		accountA.put("Name", "Name_A_0_" + TEMPLATE_NAME + "_" + UUID.getUUID());
-		createdAccountsInA.add(accountA);
+		accountA.put("Name", "Name_Salesforce_0_" + TEMPLATE_NAME + "_" + UUID.getUUID());
+		createdAccountsInSalesforce.add(accountA);
 
-		MuleEvent event = flow.process(getTestEvent(createdAccountsInA, MessageExchangePattern.REQUEST_RESPONSE));
+		MuleEvent event = flow.process(getTestEvent(createdAccountsInSalesforce, MessageExchangePattern.REQUEST_RESPONSE));
 		List<?> results = (List<?>) event.getMessage().getPayload();
 		for (int i = 0; i < results.size(); i++) {
-			createdAccountsInA.get(i).put("Id", ((SaveResult) results.get(i)).getId());
+			createdAccountsInSalesforce.get(i).put(VariableNames.ID, ((SaveResult) results.get(i)).getId());
 		}
 
-		flow = getSubFlow("createAccountInBFlow");
+		flow = getSubFlow("createAccountInDatabaseFlow");
 		flow.initialise();
 
-		Map<String, Object> accountB = new HashMap<String, Object>();
-		accountB.put("Name", "Name_B_0_" + TEMPLATE_NAME + "_" + UUID.getUUID());
-		accountB.put("Id", UUID.getUUID());
-		accountB.put("Industry", "Education");
-		accountB.put("Description", "Some account description");
-		createdAccountsInB.add(accountB);
+		Map<String, Object> accountDatabase = new HashMap<String, Object>();
+		accountDatabase.put(VariableNames.NAME, "Name_Database_0_" + TEMPLATE_NAME + "_" + UUID.getUUID());
+		accountDatabase.put(VariableNames.ID, UUID.getUUID());
+		accountDatabase.put(VariableNames.INDUSTRY, "Education");
+		accountDatabase.put("Description", "Some account description");
+		createdAccountsInDatabase.add(accountDatabase);
 
-		flow.process(getTestEvent(createdAccountsInB, MessageExchangePattern.REQUEST_RESPONSE));
+		flow.process(getTestEvent(createdAccountsInDatabase, MessageExchangePattern.REQUEST_RESPONSE));
 	}
 
 	protected void deleteTestAccountFromSandBox(List<Map<String, Object>> createdAccounts, String deleteFlow) throws Exception {
@@ -108,7 +106,7 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 		SubflowInterceptingChainLifecycleWrapper flow = getSubFlow(deleteFlow);
 		flow.initialise();
 		for (Map<String, Object> c : createdAccounts) {
-			idList.add((String) c.get("Id"));
+			idList.add((String) c.get(VariableNames.ID));
 		}
 		flow.process(getTestEvent(idList, MessageExchangePattern.REQUEST_RESPONSE));
 		idList.clear();
@@ -122,14 +120,14 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 		MuleEvent event = flow.process(getTestEvent("", MessageExchangePattern.REQUEST_RESPONSE));
 		Set<String> flowVariables = event.getFlowVariableNames();
 
-		Assert.assertTrue("The variable accountsFromOrgA is missing.", flowVariables.contains(ACCOUNTS_FROM_ORG_A));
-		Assert.assertTrue("The variable accountsFromOrgB is missing.", flowVariables.contains(ACCOUNTS_FROM_ORG_B));
+		Assert.assertTrue("The variable " + VariableNames.ACCOUNTS_FROM_SALESFORCE + " is missing.", flowVariables.contains(VariableNames.ACCOUNTS_FROM_SALESFORCE));
+		Assert.assertTrue("The variable " + VariableNames.ACCOUNTS_FROM_DATABASE + " is missing.", flowVariables.contains(VariableNames.ACCOUNTS_FROM_DATABASE));
 
-		Iterator<?> accountsFromOrgA = event.getFlowVariable(ACCOUNTS_FROM_ORG_A);
-		Collection<?> accountsFromOrgB = event.getFlowVariable(ACCOUNTS_FROM_ORG_B);
+		Iterator<?> accountsFromSalesforce = event.getFlowVariable(VariableNames.ACCOUNTS_FROM_SALESFORCE);
+		Collection<?> accountsFromDatabase = event.getFlowVariable(VariableNames.ACCOUNTS_FROM_DATABASE);
 
-		Assert.assertTrue("There should be accounts in the variable accountsFromOrgA.", accountsFromOrgA.hasNext());
-		Assert.assertTrue("There should be accounts in the variable accountsFromOrgB.", !accountsFromOrgB.isEmpty());
+		Assert.assertTrue("There should be accounts in the variable " + VariableNames.ACCOUNTS_FROM_SALESFORCE + ".", accountsFromSalesforce.hasNext());
+		Assert.assertTrue("There should be accounts in the variable " + VariableNames.ACCOUNTS_FROM_DATABASE + ".", !accountsFromDatabase.isEmpty());
 	}
 
 }

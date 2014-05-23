@@ -16,52 +16,51 @@ import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.templates.utils.Utils;
+import org.mule.templates.utils.VariableNames;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AccountMergerTransformerTest {
-	private static final String ACCOUNTS_FROM_SFDC = "accountsFromOrgA";
-	private static final String ACCOUNTS_FROM_DB = "accountsFromOrgB";
 
 	@Mock
 	private MuleContext muleContext;
 
 	@Test
 	public void testMerge() throws TransformerException {
-		List<Map<String, String>> accountsA = new ArrayList<Map<String,String>>();
+		List<Map<String, String>> accountsSalesforce = new ArrayList<Map<String,String>>();
 
-		Map<String, String> account0A = new HashMap<String, String>();
-		account0A.put("Id", "0");
-		account0A.put("Name", "Sony");
-		account0A.put("Industry", "Entertaiment");
-		account0A.put("NumberOfEmployees", "28");
-		accountsA.add(account0A);
+		Map<String, String> account0Salesforce = new HashMap<String, String>();
+		account0Salesforce.put(VariableNames.ID, "0");
+		account0Salesforce.put(VariableNames.NAME, "Sony");
+		account0Salesforce.put(VariableNames.INDUSTRY, "Entertaiment");
+		account0Salesforce.put(VariableNames.NUMBER_OF_EMPLOYEES, "28");
+		accountsSalesforce.add(account0Salesforce);
 
-		Map<String, String> account1A = new HashMap<String, String>();
-		account1A.put("Id", "1");
-		account1A.put("Name", "Generica");
-		account1A.put("Industry", "Pharmaceutic");
-		account1A.put("NumberOfEmployees", "22");
-		accountsA.add(account1A);
+		Map<String, String> account1Salesforce = new HashMap<String, String>();
+		account1Salesforce.put(VariableNames.ID, "1");
+		account1Salesforce.put(VariableNames.NAME, "Generica");
+		account1Salesforce.put(VariableNames.INDUSTRY, "Pharmaceutic");
+		account1Salesforce.put(VariableNames.NUMBER_OF_EMPLOYEES, "22");
+		accountsSalesforce.add(account1Salesforce);
 		
-		List<Map<String, String>> accountsB = new ArrayList<Map<String,String>>();
+		List<Map<String, String>> accountsDatabase = new ArrayList<Map<String,String>>();
 		
-		Map<String, String> account1B = new HashMap<String, String>();
-		account1B.put("Id", "1");
-		account1B.put("Name", "Generica");
-		account1B.put("Industry", "Experimental");
-		account1B.put("NumberOfEmployees", "500");
-		accountsB.add(account1B);
+		Map<String, String> account1Database = new HashMap<String, String>();
+		account1Database.put(VariableNames.ID, "1");
+		account1Database.put(VariableNames.NAME, "Generica");
+		account1Database.put(VariableNames.INDUSTRY, "Experimental");
+		account1Database.put(VariableNames.NUMBER_OF_EMPLOYEES, "500");
+		accountsDatabase.add(account1Database);
 
-		Map<String, String> account2B = new HashMap<String, String>();
-		account2B.put("Id", "2");
-		account2B.put("Name", "Global Voltage");
-		account2B.put("Industry", "Energetic");
-		account2B.put("NumberOfEmployees", "4160");
-		accountsB.add(account2B);
+		Map<String, String> account2Database = new HashMap<String, String>();
+		account2Database.put("Id", "2");
+		account2Database.put(VariableNames.NAME, "Global Voltage");
+		account2Database.put("Industry", "Energetic");
+		account2Database.put("NumberOfEmployees", "4160");
+		accountsDatabase.add(account2Database);
 
 		MuleMessage message = new DefaultMuleMessage(null, muleContext);
-		message.setInvocationProperty(ACCOUNTS_FROM_SFDC, accountsA.iterator());
-		message.setInvocationProperty(ACCOUNTS_FROM_DB, accountsB.iterator());
+		message.setInvocationProperty(VariableNames.ACCOUNTS_FROM_SALESFORCE, accountsSalesforce.iterator());
+		message.setInvocationProperty(VariableNames.ACCOUNTS_FROM_DATABASE, accountsDatabase.iterator());
 
 		AccountMergerTransformer transformer = new AccountMergerTransformer();
 		List<Map<String, String>> mergedList = Utils.buildList(transformer.transform(message, "UTF-8"));
@@ -72,31 +71,31 @@ public class AccountMergerTransformerTest {
 
 	private List<Map<String, String>> createExpectedList() {
 		Map<String, String> record0 = new HashMap<String, String>();
-		record0.put("IDInA", "0");
-		record0.put("IDInB", "");
-		record0.put("IndustryInA", "Entertaiment");
-		record0.put("IndustryInB", "");
-		record0.put("NumberOfEmployeesInA", "28");
-		record0.put("NumberOfEmployeesInB", "");
-		record0.put("Name", "Sony");
+		record0.put(VariableNames.ID_IN_SALESFORCE, "0");
+		record0.put(VariableNames.ID_IN_DATABASE, "");
+		record0.put(VariableNames.INDUSTRY_IN_SALESFORCE, "Entertaiment");
+		record0.put(VariableNames.INDUSTRY_IN_DATABASE, "");
+		record0.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_SALESFORCE, "28");
+		record0.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_DATABASE, "");
+		record0.put(VariableNames.NAME, "Sony");
 
 		Map<String, String> record1 = new HashMap<String, String>();
-		record1.put("IDInA", "1");
-		record1.put("IDInB", "1");
-		record1.put("IndustryInA", "Pharmaceutic");
-		record1.put("IndustryInB", "Experimental");
-		record1.put("NumberOfEmployeesInA", "22");
-		record1.put("NumberOfEmployeesInB", "500");
-		record1.put("Name", "Generica");
+		record1.put(VariableNames.ID_IN_SALESFORCE, "1");
+		record1.put(VariableNames.ID_IN_DATABASE, "1");
+		record1.put(VariableNames.INDUSTRY_IN_SALESFORCE, "Pharmaceutic");
+		record1.put(VariableNames.INDUSTRY_IN_DATABASE, "Experimental");
+		record1.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_SALESFORCE, "22");
+		record1.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_DATABASE, "500");
+		record1.put(VariableNames.NAME, "Generica");
 
 		Map<String, String> record2 = new HashMap<String, String>();
-		record2.put("IDInA", "");
-		record2.put("IDInB", "2");
-		record2.put("IndustryInA", "");
-		record2.put("IndustryInB", "Energetic");
-		record2.put("NumberOfEmployeesInA", "");
-		record2.put("NumberOfEmployeesInB", "4160");
-		record2.put("Name", "Global Voltage");
+		record2.put(VariableNames.ID_IN_SALESFORCE, "");
+		record2.put(VariableNames.ID_IN_DATABASE, "2");
+		record2.put(VariableNames.INDUSTRY_IN_SALESFORCE, "");
+		record2.put(VariableNames.INDUSTRY_IN_DATABASE, "Energetic");
+		record2.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_SALESFORCE, "");
+		record2.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_DATABASE, "4160");
+		record2.put(VariableNames.NAME, "Global Voltage");
 
 		List<Map<String, String>> expectedList = new ArrayList<Map<String, String>>();
 		expectedList.add(record0);

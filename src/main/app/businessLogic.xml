@@ -28,11 +28,11 @@ This flow should control the direction of the application, and it should be call
     </flow>
   
     <sub-flow name="gatherDataFlow" doc:name="gatherDataFlow">
-        <enricher source="#[payload]" target="#[flowVars['accountsFromOrgA']]" doc:name="Store result in FlowVar 'accountsFromOrgA'">
+        <enricher source="#[payload]" target="#[flowVars['accountsFromSalesforce']]" doc:name="Store result in FlowVar 'accountsFromSalesforce'">
             <sfdc:query config-ref="Salesforce" query="dsql:SELECT Id,AccountNumber,Description,Industry,Name,NumberOfEmployees FROM Account" doc:name="query all accounts from SalesForce"/>
         </enricher>
  
-        <enricher source="#[payload]" target="#[flowVars['accountsFromOrgB']]" doc:name="Store result in FlowVar 'accountsFromOrgB'">
+        <enricher source="#[payload]" target="#[flowVars['accountsFromDatabase']]" doc:name="Store result in FlowVar 'accountsFromDatabase'">
             <db:select config-ref="Database" doc:name="query all accounts from Database">
                 <db:parameterized-query><![CDATA[SELECT Id, AccountNumber, Description, Industry, Name, CAST(NumberOfEmployees AS CHAR) NumberOfEmployees FROM Account]]></db:parameterized-query>
             </db:select>

@@ -18,7 +18,7 @@ Please review the terms of the license before downloading and using this templat
 
 
 # Use Case <a name="usecase"/>
-As a Salesforce admin I want to aggregate accounts from Salesforce and Database Instances and compare them to see which accounts can only be found in one of the two and which accounts are in both instances. 
+I want to aggregate accounts from Salesforce and Database Instances and compare them to see which accounts can only be found in one of the two and which accounts are in both instances. 
 
 For practical purposes this Template will generate the result in the format of a CSV Report sent by mail.
 
@@ -127,12 +127,12 @@ The *mainFlow* organizes the job in three different steps and finally invokes th
 This flow has Exception Strategy that basically consists on invoking the *defaultChoiseExceptionStrategy* defined in *errorHandling.xml* file.
 
 ###  Gather Data Flow
-Mainly consisting of two calls (Queries) to SalesForce and storing each response on the Invocation Variable named *accountsFromOrgA* or *accountsFromOrgB* accordingly.
+Mainly consisting of two calls (Queries) to SalesForce and storing each response on the Invocation Variable named *accountsFromSalesforce* or *accountsFromDatabase* accordingly.
 
 ###  Aggregation Flow
 [Java Transformer](http://www.mulesoft.org/documentation/display/current/Java+Transformer+Reference) responsible for aggregating the results from the two SalesForce Org Users.
 Criteria and format applied:
-+ Transformer receives a Mule Message with the two Invocation variables *accountsFromOrgA* and *accountsFromOrgB* to result in List of Maps with keys: **Name**, **IDInA**, **IndustryInA**, **NumberOfEmployeesInA**, **IDInB**, **IndustryInB**, **numberOfEmployeesInB**.
++ Transformer receives a Mule Message with the two Invocation variables *accountsFromSalesforce* and *accountsFromDatabase* to result in List of Maps with keys: **Name**, **IDInSalesforce**, **IndustryInSalesforce**, **NumberOfEmployeesInSalesforce**, **IDInDatabase**, **IndustryInDatabase**, **numberOfEmployeesInDatabase**.
 
 + Accounts will be matched by Name, that is to say, a record in both instances with same Name is considered the same account.
 
@@ -146,7 +146,7 @@ Criteria and format applied:
 All records ordered alphabetically by name within each category.
 If you want to change this order then the *compare* method should be modified.
 
-+ CSV Report [DataMapper](http://www.mulesoft.org/documentation/display/current/Datamapper+User+Guide+and+Reference) transforming the List of Maps in CSV with headers **Name**, **IDInA**, **IndustryInA**, **NumberOfEmployeesInA**, **IDInB**, **IndustryInB**, **numberOfEmployeesInB**.
++ CSV Report [DataMapper](http://www.mulesoft.org/documentation/display/current/Datamapper+User+Guide+and+Reference) transforming the List of Maps in CSV with headers **Name**, **IDInSalesforce**, **IndustryInSalesforce**, **NumberOfEmployeesInSalesforce**, **IDInDatabase**, **IndustryInDatabase**, **numberOfEmployeesInDatabase**.
 + An [Object to string transformer](http://www.mulesoft.org/documentation/display/current/Transformers) is used to set the payload as an String. 
 
 ## errorHandling.xml<a name="errorhandlingxml"/>
