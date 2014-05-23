@@ -11,6 +11,7 @@ import org.mule.AbstractTemplateTestCase;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleEvent;
 import org.mule.processor.chain.SubflowInterceptingChainLifecycleWrapper;
+import org.mule.templates.utils.VariableNames;
 
 /**
  * The objective of this class is to validate the correct behavior of the flows
@@ -18,17 +19,14 @@ import org.mule.processor.chain.SubflowInterceptingChainLifecycleWrapper;
  */
 public class FlowsTest extends AbstractTemplateTestCase {
 
-	private static final String ACCOUNTS_FROM_ORG_A = "accountsFromOrgA";
-	private static final String ACCOUNTS_FROM_ORG_B = "accountsFromOrgB";
-	
 	@Test
 	public void testAggregationFlow() throws Exception {
-		List<Map<String, String>> accountsFromOrgA = createAccountLists("A", 0, 1);
-		List<Map<String, String>> accountsFromOrgB = createAccountLists("B", 1, 2);
+		List<Map<String, String>> accountsFromOrgA = createAccountLists("Salesforce", 0, 1);
+		List<Map<String, String>> accountsFromOrgB = createAccountLists("Database", 1, 2);
 
 		MuleEvent testEvent = getTestEvent("", MessageExchangePattern.REQUEST_RESPONSE);
-		testEvent.getMessage().setInvocationProperty(ACCOUNTS_FROM_ORG_A, accountsFromOrgA.iterator());
-		testEvent.getMessage().setInvocationProperty(ACCOUNTS_FROM_ORG_B, accountsFromOrgB.iterator());
+		testEvent.getMessage().setInvocationProperty(VariableNames.ACCOUNTS_FROM_SALESFORCE, accountsFromOrgA.iterator());
+		testEvent.getMessage().setInvocationProperty(VariableNames.ACCOUNTS_FROM_DATABASE, accountsFromOrgB.iterator());
 
 		SubflowInterceptingChainLifecycleWrapper flow = getSubFlow("aggregationFlow");
 		flow.initialise();
@@ -40,12 +38,12 @@ public class FlowsTest extends AbstractTemplateTestCase {
 
 	@Test
 	public void testFormatOutputFlow() throws Exception {
-		List<Map<String, String>> accountsFromOrgA = createAccountLists("A", 0, 1);
-		List<Map<String, String>> accountsFromOrgB = createAccountLists("B", 1, 2);
+		List<Map<String, String>> accountsFromOrgA = createAccountLists("Salesforce", 0, 1);
+		List<Map<String, String>> accountsFromOrgB = createAccountLists("Database", 1, 2);
 
 		MuleEvent testEvent = getTestEvent("", MessageExchangePattern.REQUEST_RESPONSE);
-		testEvent.getMessage().setInvocationProperty(ACCOUNTS_FROM_ORG_A, accountsFromOrgA.iterator());
-		testEvent.getMessage().setInvocationProperty(ACCOUNTS_FROM_ORG_B, accountsFromOrgB.iterator());
+		testEvent.getMessage().setInvocationProperty(VariableNames.ACCOUNTS_FROM_SALESFORCE, accountsFromOrgA.iterator());
+		testEvent.getMessage().setInvocationProperty(VariableNames.ACCOUNTS_FROM_DATABASE, accountsFromOrgB.iterator());
 
 		SubflowInterceptingChainLifecycleWrapper flow = getSubFlow("aggregationFlow");
 		flow.initialise();
