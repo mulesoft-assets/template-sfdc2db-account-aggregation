@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -13,11 +14,13 @@ import java.util.Set;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mule.AbstractTemplateTestCase;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleEvent;
 import org.mule.processor.chain.SubflowInterceptingChainLifecycleWrapper;
+import org.mule.templates.db.MySQLDbCreator;
 import org.mule.templates.utils.VariableNames;
 import org.mule.util.UUID;
 
@@ -35,9 +38,20 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 
 	private List<Map<String, Object>> createdAccountsInSalesforce = new ArrayList<Map<String, Object>>();
 	private List<Map<String, Object>> createdAccountsInDatabase = new ArrayList<Map<String, Object>>();
+	
+	private static final String PATH_TO_TEST_PROPERTIES = "./src/test/resources/mule.test.properties";
+	private static final String PATH_TO_SQL_SCRIPT = "src/main/resources/account.sql";
+	private static final String DATABASE_NAME = "SFDC2DBAccountAggregation" + new Long(new Date().getTime()).toString();
+	private static final MySQLDbCreator DBCREATOR = new MySQLDbCreator(DATABASE_NAME, PATH_TO_SQL_SCRIPT, PATH_TO_TEST_PROPERTIES);
 
+	@BeforeClass
+	public static void init() {
+		System.setProperty("db.jdbcUrl", DBCREATOR.getDatabaseUrlWithName());
+	}
+	
 	@Before
 	public void setUp() throws Exception {
+		DBCREATOR.setUpDatabase();
 		createAccounts();
 	}
 
@@ -45,6 +59,7 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 	public void tearDown() throws Exception {
 		deleteTestAccountFromSandBox(createdAccountsInSalesforce, "deleteAccountFromSalesforceFlow");
 		deleteTestAccountFromSandBox(createdAccountsInDatabase, "deleteAccountFromDatabaseFlow");
+		DBCREATOR.tearDownDataBase();
 	}
 
 	@Override
