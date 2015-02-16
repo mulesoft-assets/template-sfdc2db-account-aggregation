@@ -106,11 +106,9 @@ This flow has Exception Strategy that basically consists on invoking the *defaul
 $H$H# Gather Data Flow
 Mainly consisting of two calls (Queries) to SalesForce and storing each response on the Invocation Variable named *accountsFromSalesforce* or *accountsFromDatabase* accordingly.
 
-$H$H# Aggregation Flow
-[Java Transformer](http://www.mulesoft.org/documentation/display/current/Java+Transformer+Reference) responsible for aggregating the results from the two SalesForce Org Users.
+[Scatter Gather](http://www.mulesoft.org/documentation/display/current/Scatter-Gather) is responsible for aggregating the results from the two collections of Users.
 Criteria and format applied:
-+ Transformer receives a Mule Message with the two Invocation variables *accountsFromSalesforce* and *accountsFromDatabase* to result in List of Maps with keys: **Name**, **IDInSalesforce**, **IndustryInSalesforce**, **NumberOfEmployeesInSalesforce**, **IDInDatabase**, **IndustryInDatabase**, **numberOfEmployeesInDatabase**.
-
++ Scatter Gather component implements an aggregation strategy that results in List of Maps with keys: **Name**, **IDInSalesforce**, **IndustryInSalesforce**, **NumberOfEmployeesInSalesforce**, **IDInDatabase**, **IndustryInDatabase**, **numberOfEmployeesInDatabase**. 
 + Accounts will be matched by Name, that is to say, a record in both instances with same Name is considered the same account.
 
 $H$H# Format Output Flow
