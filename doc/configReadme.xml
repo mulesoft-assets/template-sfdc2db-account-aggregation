@@ -106,13 +106,13 @@ This flow has Exception Strategy that basically consists on invoking the *defaul
 $H$H# Gather Data Flow
 Mainly consisting of two calls (Queries) to SalesForce and storing each response on the Invocation Variable named *accountsFromSalesforce* or *accountsFromDatabase* accordingly.
 
-[Scatter Gather](http://www.mulesoft.org/documentation/display/current/Scatter-Gather) is responsible for aggregating the results from the two collections of Users.
+[Scatter Gather](http://www.mulesoft.org/documentation/display/current/Scatter-Gather) is responsible for aggregating the results from the two collections of Accounts.
 Criteria and format applied:
 + Scatter Gather component implements an aggregation strategy that results in List of Maps with keys: **Name**, **IDInSalesforce**, **IndustryInSalesforce**, **NumberOfEmployeesInSalesforce**, **IDInDatabase**, **IndustryInDatabase**, **numberOfEmployeesInDatabase**. 
 + Accounts will be matched by Name, that is to say, a record in both instances with same Name is considered the same account.
 
 $H$H# Format Output Flow
-+ [Java Transformer](http://www.mulesoft.org/documentation/display/current/Java+Transformer+Reference) responsible for sorting the list of users in the following order:
++ [Java Transformer](http://www.mulesoft.org/documentation/display/current/Java+Transformer+Reference) responsible for sorting the list of accounts in the following order:
 
 1. Accounts only in Salesforce
 2. Accounts only in Database
