@@ -74,8 +74,8 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 	}
 
 	private String getTestFlows() {
-		File testFlowsFolder = new File(TEST_FLOWS_FOLDER_PATH);
-		File[] listOfFiles = testFlowsFolder.listFiles(new FileFilter() {
+		final File testFlowsFolder = new File(TEST_FLOWS_FOLDER_PATH);
+		final File[] listOfFiles = testFlowsFolder.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File f) {
 				return f.isFile() && f.getName().endsWith(".xml");
@@ -86,8 +86,8 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 			return "";
 		}
 
-		StringBuilder resources = new StringBuilder();
-		for (File f : listOfFiles) {
+		final StringBuilder resources = new StringBuilder();
+		for (final File f : listOfFiles) {
 			resources.append(",").append(TEST_FLOWS_FOLDER_PATH).append(f.getName());
 		}
 		return resources.toString();
@@ -97,12 +97,12 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 		SubflowInterceptingChainLifecycleWrapper flow = getSubFlow("createAccountInSalesforceFlow");
 		flow.initialise();
 
-		Map<String, Object> accountA = new HashMap<String, Object>();
+		final Map<String, Object> accountA = new HashMap<String, Object>();
 		accountA.put("Name", "Name_Salesforce_0_" + TEMPLATE_NAME + "_" + UUID.getUUID());
 		createdAccountsInSalesforce.add(accountA);
 
-		MuleEvent event = flow.process(getTestEvent(createdAccountsInSalesforce, MessageExchangePattern.REQUEST_RESPONSE));
-		List<?> results = (List<?>) event.getMessage().getPayload();
+		final MuleEvent event = flow.process(getTestEvent(createdAccountsInSalesforce, MessageExchangePattern.REQUEST_RESPONSE));
+		final List<?> results = (List<?>) event.getMessage().getPayload();
 		for (int i = 0; i < results.size(); i++) {
 			createdAccountsInSalesforce.get(i).put(VariableNames.ID, ((SaveResult) results.get(i)).getId());
 		}
@@ -110,7 +110,7 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 		flow = getSubFlow("createAccountInDatabaseFlow");
 		flow.initialise();
 
-		Map<String, Object> accountDatabase = new HashMap<String, Object>();
+		final Map<String, Object> accountDatabase = new HashMap<String, Object>();
 		accountDatabase.put(VariableNames.NAME, "Name_Database_0_" + TEMPLATE_NAME + "_" + UUID.getUUID());
 		accountDatabase.put(VariableNames.ID, UUID.getUUID());
 		accountDatabase.put(VariableNames.INDUSTRY, "Education");
@@ -121,12 +121,12 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 	}
 
 	protected void deleteTestAccountFromSandBox(List<Map<String, Object>> createdAccounts, String deleteFlow) throws Exception {
-		List<String> idList = new ArrayList<String>();
+		final List<String> idList = new ArrayList<String>();
 
 		// Delete the created accounts in A
-		SubflowInterceptingChainLifecycleWrapper flow = getSubFlow(deleteFlow);
+		final SubflowInterceptingChainLifecycleWrapper flow = getSubFlow(deleteFlow);
 		flow.initialise();
-		for (Map<String, Object> c : createdAccounts) {
+		for (final Map<String, Object> c : createdAccounts) {
 			idList.add((String) c.get(VariableNames.ID));
 		}
 		flow.process(getTestEvent(idList, MessageExchangePattern.REQUEST_RESPONSE));
@@ -135,17 +135,17 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 
 	@Test
 	public void testGatherDataFlow() throws Exception {
-		SubflowInterceptingChainLifecycleWrapper flow = getSubFlow("gatherDataFlow");
+		final SubflowInterceptingChainLifecycleWrapper flow = getSubFlow("gatherDataFlow");
 		flow.initialise();
 
-		MuleEvent event = flow.process(getTestEvent("", MessageExchangePattern.REQUEST_RESPONSE));
-		Set<String> flowVariables = event.getFlowVariableNames();
+		final MuleEvent event = flow.process(getTestEvent("", MessageExchangePattern.REQUEST_RESPONSE));
+		final Set<String> flowVariables = event.getFlowVariableNames();
 
 		Assert.assertTrue("The variable " + VariableNames.ACCOUNTS_FROM_SALESFORCE + " is missing.", flowVariables.contains(VariableNames.ACCOUNTS_FROM_SALESFORCE));
 		Assert.assertTrue("The variable " + VariableNames.ACCOUNTS_FROM_DATABASE + " is missing.", flowVariables.contains(VariableNames.ACCOUNTS_FROM_DATABASE));
 
-		Iterator<?> accountsFromSalesforce = event.getFlowVariable(VariableNames.ACCOUNTS_FROM_SALESFORCE);
-		Collection<?> accountsFromDatabase = event.getFlowVariable(VariableNames.ACCOUNTS_FROM_DATABASE);
+		final Iterator<?> accountsFromSalesforce = event.getFlowVariable(VariableNames.ACCOUNTS_FROM_SALESFORCE);
+		final Collection<?> accountsFromDatabase = event.getFlowVariable(VariableNames.ACCOUNTS_FROM_DATABASE);
 
 		Assert.assertTrue("There should be accounts in the variable " + VariableNames.ACCOUNTS_FROM_SALESFORCE + ".", accountsFromSalesforce.hasNext());
 		Assert.assertTrue("There should be accounts in the variable " + VariableNames.ACCOUNTS_FROM_DATABASE + ".", !accountsFromDatabase.isEmpty());

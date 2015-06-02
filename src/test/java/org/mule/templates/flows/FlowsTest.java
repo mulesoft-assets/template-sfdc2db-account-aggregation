@@ -27,16 +27,16 @@ public class FlowsTest extends AbstractTemplateTestCase {
 
 	@Test
 	public void testAggregationFlow() throws Exception {
-		List<Map<String, String>> accountsFromOrgA = createAccountLists("Salesforce", 0, 1);
-		List<Map<String, String>> accountsFromOrgB = createAccountLists("Database", 1, 2);
+		final List<Map<String, String>> accountsFromOrgA = createAccountLists("Salesforce", 0, 1);
+		final List<Map<String, String>> accountsFromOrgB = createAccountLists("Database", 1, 2);
 
-		MuleEvent testEvent = getTestEvent("", MessageExchangePattern.REQUEST_RESPONSE);
+		final MuleEvent testEvent = getTestEvent("", MessageExchangePattern.REQUEST_RESPONSE);
 		testEvent.getMessage().setInvocationProperty(VariableNames.ACCOUNTS_FROM_SALESFORCE, accountsFromOrgA.iterator());
 		testEvent.getMessage().setInvocationProperty(VariableNames.ACCOUNTS_FROM_DATABASE, accountsFromOrgB.iterator());
 
-		SubflowInterceptingChainLifecycleWrapper flow = getSubFlow("aggregationFlow");
+		final SubflowInterceptingChainLifecycleWrapper flow = getSubFlow("aggregationFlow");
 		flow.initialise();
-		MuleEvent event = flow.process(testEvent);
+		final MuleEvent event = flow.process(testEvent);
 
 		Assert.assertTrue("The payload should not be null.", event.getMessage().getPayload() != null);
 		Assert.assertFalse("The account list should not be empty.", ((List<?>) event.getMessage().getPayload()).isEmpty());
@@ -44,10 +44,10 @@ public class FlowsTest extends AbstractTemplateTestCase {
 
 	@Test
 	public void testFormatOutputFlow() throws Exception {
-		List<Map<String, String>> accountsFromOrgA = createAccountLists("Salesforce", 0, 1);
-		List<Map<String, String>> accountsFromOrgB = createAccountLists("Database", 1, 2);
+		final List<Map<String, String>> accountsFromOrgA = createAccountLists("Salesforce", 0, 1);
+		final List<Map<String, String>> accountsFromOrgB = createAccountLists("Database", 1, 2);
 
-		MuleEvent testEvent = getTestEvent("", MessageExchangePattern.REQUEST_RESPONSE);
+		final MuleEvent testEvent = getTestEvent("", MessageExchangePattern.REQUEST_RESPONSE);
 		testEvent.getMessage().setInvocationProperty(VariableNames.ACCOUNTS_FROM_SALESFORCE, accountsFromOrgA.iterator());
 		testEvent.getMessage().setInvocationProperty(VariableNames.ACCOUNTS_FROM_DATABASE, accountsFromOrgB.iterator());
 
@@ -63,7 +63,7 @@ public class FlowsTest extends AbstractTemplateTestCase {
 	}
 
 	private List<Map<String, String>> createAccountLists(String orgId, int start, int end) {
-		List<Map<String, String>> accountList = new ArrayList<Map<String, String>>();
+		final List<Map<String, String>> accountList = new ArrayList<Map<String, String>>();
 		for (int i = start; i <= end; i++) {
 			accountList.add(createAccount(orgId, i));
 		}
@@ -71,7 +71,7 @@ public class FlowsTest extends AbstractTemplateTestCase {
 	}
 
 	private Map<String, String> createAccount(String orgId, int sequence) {
-		Map<String, String> account = new HashMap<String, String>();
+		final Map<String, String> account = new HashMap<String, String>();
 
 		account.put("Id", new Integer(sequence).toString());
 		account.put("Name", "SomeName_" + sequence);
