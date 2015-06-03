@@ -109,7 +109,8 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 
 		flow = getSubFlow("createAccountInDatabaseFlow");
 		flow.initialise();
-
+		flow.setMuleContext(muleContext);
+		
 		final Map<String, Object> accountDatabase = new HashMap<String, Object>();
 		accountDatabase.put(VariableNames.NAME, "Name_Database_0_" + TEMPLATE_NAME + "_" + UUID.getUUID());
 		accountDatabase.put(VariableNames.ID, UUID.getUUID());
