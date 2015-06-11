@@ -136,10 +136,7 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 
 	@Test
 	public void testGatherDataFlow() throws Exception {
-		final SubflowInterceptingChainLifecycleWrapper flow = getSubFlow("gatherDataFlow");
-		flow.initialise();
-
-		final MuleEvent event = flow.process(getTestEvent("", MessageExchangePattern.REQUEST_RESPONSE));
+		MuleEvent event = runFlow("gatherDataFlow");
 		final Set<String> flowVariables = event.getFlowVariableNames();
 
 		Assert.assertTrue("The variable " + VariableNames.ACCOUNTS_FROM_SALESFORCE + " is missing.", flowVariables.contains(VariableNames.ACCOUNTS_FROM_SALESFORCE));
