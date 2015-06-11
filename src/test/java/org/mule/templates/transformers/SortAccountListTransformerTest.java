@@ -18,10 +18,12 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
+import org.mule.api.config.MuleConfiguration;
 import org.mule.api.transformer.TransformerException;
 import org.mule.templates.utils.Utils;
 import org.mule.templates.utils.VariableNames;
@@ -34,9 +36,15 @@ public class SortAccountListTransformerTest {
 	
 	@Mock
 	private MuleContext muleContext;
+	@Mock
+	private MuleConfiguration muleConfiguration;
 
 	@Test
 	public void testSort() throws TransformerException {
+		
+		Mockito.when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
+		Mockito.when(muleConfiguration.getDefaultEncoding()).thenReturn("UTF-8");
+		
 		final MuleMessage message = new DefaultMuleMessage(createOriginalList(), muleContext);
 
 		final SortAccountListTransformer transformer = new SortAccountListTransformer();
