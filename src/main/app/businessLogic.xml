@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" 
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:db="http://www.mulesoft.org/schema/mule/db" 
 xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" 
 xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" 
 xmlns="http://www.mulesoft.org/schema/mule/core" 
@@ -12,39 +12,31 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.sprin
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
 http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
-http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
 http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
-
 
         <flow name="mainFlow"  doc:description="This flow is the entry point to the Template business logic.
 
 This flow should control the direction of the application, and it should be called by the different endpoints that your Template exposes to trigger it.">
         <flow-ref name="gatherDataFlow" doc:name="call gatherDataFlow"/>
-        <flow-ref name="aggregationFlow" doc:name="call aggregationFlow"/> 
+ 
         <flow-ref name="formatOutputFlow" doc:name="call formatOutputFlow"/>
         <flow-ref name="outboundFlow" doc:name="call outboundFlow"/>
         <exception-strategy ref="defaultChoiceExceptionStrategy" doc:name="Reference Exception Strategy"/>
     </flow>
-  
     <flow name="gatherDataFlow" processingStrategy="synchronous">
-        <enricher source="#[payload]" target="#[flowVars['accountsFromSalesforce']]" doc:name="Store result in FlowVar 'accountsFromSalesforce'">
+        <scatter-gather doc:name="Scatter-Gather">
+            <custom-aggregation-strategy class="org.mule.templates.transformers.AccountMergeAggregationStrategy"/>
             <sfdc:query config-ref="Salesforce" query="dsql:SELECT Id,AccountNumber,Description,Industry,Name,NumberOfEmployees FROM Account" doc:name="query all accounts from SalesForce"/>
-        </enricher>
- 
-        <enricher source="#[payload]" target="#[flowVars['accountsFromDatabase']]" doc:name="Store result in FlowVar 'accountsFromDatabase'">
             <db:select config-ref="Database" doc:name="query all accounts from Database">
                 <db:parameterized-query><![CDATA[SELECT Id, AccountNumber, Description, Industry, Name, CAST(NumberOfEmployees AS CHAR) NumberOfEmployees FROM Account]]></db:parameterized-query>
             </db:select>
-        </enricher>
+        </scatter-gather>
     </flow>
 
-    <flow name="aggregationFlow" processingStrategy="synchronous">
-        <custom-transformer class="org.mule.templates.transformers.AccountMergerTransformer" doc:name="Custom component to build merged account list"/>
-    </flow>
     
     <flow name="formatOutputFlow" processingStrategy="synchronous">
-        <custom-transformer class="org.mule.templates.transformers.SortAccountListTransformer" doc:name="Custom component to sort accounts list"/>
+        <custom-transformer class="org.mule.templates.transformers.SortAccountList" doc:name="Custom component to sort accounts list"/>
         <dw:transform-message doc:name="Map Collection to CSV">
             <dw:set-payload><![CDATA[%dw 1.0
 %input payload application/java

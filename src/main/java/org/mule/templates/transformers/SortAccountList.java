@@ -25,7 +25,7 @@ import org.mule.transformer.AbstractMessageTransformer;
  * @author damian.sima
  * @author martin
  */
-public final class SortAccountListTransformer extends AbstractMessageTransformer {
+public final class SortAccountList extends AbstractMessageTransformer {
 	
 	private static final Comparator<Map<String, String>> ACCOUNT_MAP_COMPARATOR = new Comparator<Map<String, String>>() {
 

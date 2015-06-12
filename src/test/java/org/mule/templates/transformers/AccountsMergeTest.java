@@ -29,17 +29,29 @@ import org.mule.templates.utils.VariableNames;
 
 @SuppressWarnings({ "deprecation", "unused" })
 @RunWith(MockitoJUnitRunner.class)
-public class AccountMergerTransformerTest {
+public class AccountsMergeTest {
 	
-	private static final Logger LOG = LogManager.getLogger(AccountMergerTransformerTest.class);
+	private static final Logger LOG = LogManager.getLogger(AccountsMergeTest.class);
 
 	@Mock
 	private MuleContext muleContext;
 
 	@Test
 	public void testMerge() throws TransformerException {
-		final List<Map<String, String>> accountsSalesforce = new ArrayList<Map<String,String>>();
+		final List<Map<String, String>> accountsSalesforce = createAccountsSalesforce();
 
+		final List<Map<String, String>> accountsDatabase = createAccountsDatabase();
+		
+		final AccountsMerge accountsMerge = new AccountsMerge();
+		final List<Map<String, String>> mergedList = accountsMerge.mergeList(accountsSalesforce, accountsDatabase);
+
+		LOG.info("Merged list is: " + mergedList);
+		Assert.assertEquals("The merged list obtained is not as expected", createExpectedList(), mergedList);
+	}
+	
+	static List<Map<String, String>> createAccountsSalesforce() {
+		List<Map<String, String>> accountsSalesforce = new ArrayList<Map<String,String>>();
+		
 		final Map<String, String> account0Salesforce = new HashMap<String, String>();
 		account0Salesforce.put(VariableNames.ID, "0");
 		account0Salesforce.put(VariableNames.NAME, "Sony");
@@ -54,7 +66,11 @@ public class AccountMergerTransformerTest {
 		account1Salesforce.put(VariableNames.NUMBER_OF_EMPLOYEES, "22");
 		accountsSalesforce.add(account1Salesforce);
 		
-		final List<Map<String, String>> accountsDatabase = new ArrayList<Map<String,String>>();
+		return accountsSalesforce;
+	}
+
+	static List<Map<String, String>> createAccountsDatabase() {
+		List<Map<String, String>> accountsDatabase = new ArrayList<Map<String,String>>();
 		
 		final Map<String, String> account1Database = new HashMap<String, String>();
 		account1Database.put(VariableNames.ID, "1");
@@ -69,19 +85,11 @@ public class AccountMergerTransformerTest {
 		account2Database.put("Industry", "Energetic");
 		account2Database.put("NumberOfEmployees", "4160");
 		accountsDatabase.add(account2Database);
-
-		final MuleMessage message = new DefaultMuleMessage(null, muleContext);
-		message.setInvocationProperty(VariableNames.ACCOUNTS_FROM_SALESFORCE, accountsSalesforce.iterator());
-		message.setInvocationProperty(VariableNames.ACCOUNTS_FROM_DATABASE, accountsDatabase.iterator());
-
-		final AccountMergerTransformer transformer = new AccountMergerTransformer();
-		final List<Map<String, String>> mergedList = Utils.buildList(transformer.transform(message, "UTF-8"));
-
-		LOG.info("Merged list is: " + mergedList);
-		Assert.assertEquals("The merged list obtained is not as expected", createExpectedList(), mergedList);
+		
+		return accountsDatabase;
 	}
 
-	private List<Map<String, String>> createExpectedList() {
+	static List<Map<String, String>> createExpectedList() {
 		final Map<String, String> record0 = new HashMap<String, String>();
 		record0.put(VariableNames.ID_IN_SALESFORCE, "0");
 		record0.put(VariableNames.ID_IN_DATABASE, "");

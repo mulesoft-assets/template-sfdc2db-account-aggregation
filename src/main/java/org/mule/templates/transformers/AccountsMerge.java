@@ -25,7 +25,7 @@ import org.mule.transformer.AbstractMessageTransformer;
  * @author damian.sima
  * @author martin
  */
-public final class AccountMergerTransformer extends AbstractMessageTransformer {
+public final class AccountsMerge extends AbstractMessageTransformer {
 
 	private static final String EMPTY = "";
 
@@ -47,7 +47,7 @@ public final class AccountMergerTransformer extends AbstractMessageTransformer {
 	 *            accounts from organization B
 	 * @return a list with the merged content of the to input lists
 	 */
-	private static List<Map<String, String>> mergeList(List<Map<String, String>> accountsFromOrgA, List<Map<String, String>> accountsFromOrgB) {
+	List<Map<String, String>> mergeList(List<Map<String, String>> accountsFromOrgA, List<Map<String, String>> accountsFromOrgB) {
 		List<Map<String, String>> mergedAccountList = new ArrayList<Map<String, String>>();
 
 		// Put all accounts from A in the merged contactList

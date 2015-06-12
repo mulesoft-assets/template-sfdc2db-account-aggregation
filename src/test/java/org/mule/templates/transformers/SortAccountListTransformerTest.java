@@ -47,7 +47,7 @@ public class SortAccountListTransformerTest {
 		
 		final MuleMessage message = new DefaultMuleMessage(createOriginalList(), muleContext);
 
-		final SortAccountListTransformer transformer = new SortAccountListTransformer();
+		final SortAccountList transformer = new SortAccountList();
 		final List<Map<String, String>> sortedList = Utils.buildList(transformer.transform(message, "UTF-8"));
 
 		LOG.info("Sorted list is:" + sortedList);
