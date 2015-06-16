@@ -30,6 +30,7 @@ This flow should control the direction of the application, and it should be call
             <sfdc:query config-ref="Salesforce" query="dsql:SELECT Id,AccountNumber,Description,Industry,Name,NumberOfEmployees FROM Account" doc:name="query all accounts from SalesForce"/>
             <db:select config-ref="Database" doc:name="query all accounts from Database">
                 <db:parameterized-query><![CDATA[SELECT Id, AccountNumber, Description, Industry, Name, CAST(NumberOfEmployees AS CHAR) NumberOfEmployees FROM Account]]></db:parameterized-query>
+
             </db:select>
         </scatter-gather>
     </flow>

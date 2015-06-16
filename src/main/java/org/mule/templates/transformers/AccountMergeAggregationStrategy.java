@@ -7,6 +7,7 @@
 package org.mule.templates.transformers;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +50,11 @@ public class AccountMergeAggregationStrategy implements AggregationStrategy {
 		return new DefaultMuleEvent(muleMessage, muleEvent);
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<Map<String, String>> getAccountsList(List<MuleEvent> events, int index) {
+		if(events.get(index).getMessage().getPayload() instanceof List){
+			return (List<Map<String, String>>) events.get(index).getMessage().getPayload();
+		}
 		Iterator<Map<String, String>> iterator = (Iterator<Map<String, String>>) events.get(index).getMessage().getPayload();
 		return Lists.newArrayList(iterator);
 	}
