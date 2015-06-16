@@ -4,18 +4,16 @@
  * All rights reserved.  http://www.mulesoft.com
  */
 
-package org.mule.kicks.integration;
+package org.mule.templates.integration;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.junit.After;
 import org.junit.Assert;
