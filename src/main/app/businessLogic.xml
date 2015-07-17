@@ -45,13 +45,13 @@ This flow should control the direction of the application, and it should be call
 ---
 payload map
 {
-	IDInSalesforce: $.IDInSalesforce when ($.IDInSalesforce != null) otherwise "",
-	IDInDatabase: $.IDInDatabase when ($.IDInDatabase != null) otherwise "",
-	IndustryInSalesforce: $.IndustryInSalesforce when ($.IndustryInSalesforce != null) otherwise "",
-	IndustryInDatabase: $.IndustryInDatabase when ($.IndustryInDatabase != null) otherwise "",	
-	Name: $.Name when ($.Name != null) otherwise "",
-	NumberOfEmployeesInSalesforce: $.NumberOfEmployeesInSalesforce when ($.NumberOfEmployeesInSalesforce != null) otherwise "",
-	NumberOfEmployeesInDatabase: $.NumberOfEmployeesInDatabase when ($.NumberOfEmployeesInDatabase != null) otherwise ""
+	IDInSalesforce: $.IDInSalesforce,
+	IDInDatabase: $.IDInDatabase,
+	IndustryInSalesforce: $.IndustryInSalesforce,
+	IndustryInDatabase: $.IndustryInDatabase,	
+	Name: $.Name,
+	NumberOfEmployeesInSalesforce: $.NumberOfEmployeesInSalesforce,
+	NumberOfEmployeesInDatabase: $.NumberOfEmployeesInDatabase
 }]]></dw:set-payload>
         </dw:transform-message>
 
