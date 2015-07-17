@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <configuration>
 	<placeholders>
-		<placeholder id="template_name">Salesforce to Database Account Aggregation</placeholder>
+		<placeholder id="template_name">Salesforce and Database Account Aggregation</placeholder>
 	</placeholders>
 	<sections>
 		<section id="use_case">
@@ -49,7 +49,7 @@ After this, to trigger the use case you just need to hit the local HTTP endpoint
 + sfdc.username `bob.dylan@org`
 + sfdc.password `DylanPassword123`
 + sfdc.securityToken `avsfwCUl7apQs56Xq2AKi3X`
-+ sfdc.url `https://login.salesforce.com/services/Soap/u/26.0`
++ sfdc.url `https://login.salesforce.com/services/Soap/u/32.0`
 
 #### Database Connector configuration
 + db.jdbcUrl `jdbc:mysql://localhost:3306/mule?user=joan.baez&password=JoanBaez456`

@@ -1,5 +1,5 @@
 
-# Anypoint Template: Salesforce to Database Account Aggregation
+# Anypoint Template: Salesforce and Database Account Aggregation
 
 + [License Agreement](#licenseagreement)
 + [Use Case](#usecase)
@@ -112,7 +112,7 @@ column='486'
 
 
 # Run it! <a name="runit"/>
-Simple steps to get Salesforce to Database Account Aggregation running.
+Simple steps to get Salesforce and Database Account Aggregation running.
 
 
 ## Running on premise <a name="runonopremise"/>
@@ -169,7 +169,7 @@ In order to use this Mule Anypoint Template you need to configure properties (Cr
 + sfdc.username `bob.dylan@org`
 + sfdc.password `DylanPassword123`
 + sfdc.securityToken `avsfwCUl7apQs56Xq2AKi3X`
-+ sfdc.url `https://login.salesforce.com/services/Soap/u/26.0`
++ sfdc.url `https://login.salesforce.com/services/Soap/u/32.0`
 
 #### Database Connector configuration
 + db.jdbcUrl `jdbc:mysql://localhost:3306/mule?user=joan.baez&password=JoanBaez456`
