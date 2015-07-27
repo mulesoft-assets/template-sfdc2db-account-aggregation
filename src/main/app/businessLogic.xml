@@ -40,7 +40,6 @@ This flow should control the direction of the application, and it should be call
         <custom-transformer class="org.mule.templates.transformers.SortAccountList" doc:name="Custom component to sort accounts list"/>
         <dw:transform-message doc:name="Map Collection to CSV">
             <dw:set-payload><![CDATA[%dw 1.0
-%input payload application/java
 %output application/csv
 ---
 payload map
