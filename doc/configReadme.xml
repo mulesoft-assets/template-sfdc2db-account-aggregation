@@ -123,7 +123,7 @@ $H$H# Format Output Flow
 All records ordered alphabetically by name within each category.
 If you want to change this order then the *compare* method should be modified.
 
-+ CSV Report [DataMapper](http://www.mulesoft.org/documentation/display/current/Datamapper+User+Guide+and+Reference) transforming the List of Maps in CSV with headers **Name**, **IDInSalesforce**, **IndustryInSalesforce**, **NumberOfEmployeesInSalesforce**, **IDInDatabase**, **IndustryInDatabase**, **numberOfEmployeesInDatabase**.
++ CSV Report [DataWeave](https://developer.mulesoft.com/docs/display/current/DataWeave+Reference+Documentation) transforming the List of Maps in CSV with headers **Name**, **IDInSalesforce**, **IndustryInSalesforce**, **NumberOfEmployeesInSalesforce**, **IDInDatabase**, **IndustryInDatabase**, **numberOfEmployeesInDatabase**.
 + An [Object to string transformer](http://www.mulesoft.org/documentation/display/current/Transformers) is used to set the payload as an String. 
 ]]>
 		</section>
