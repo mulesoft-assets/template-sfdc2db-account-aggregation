@@ -46,7 +46,7 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 	private static final String PATH_TO_TEST_PROPERTIES = "./src/test/resources/mule.test.properties";
 	private static final String PATH_TO_SQL_SCRIPT = "src/main/resources/account.sql";
 	private static final String DATABASE_NAME = "SFDC2DBAccountAggregation" + new Long(new Date().getTime()).toString();
-	private static final MySQLDbCreator DBCREATOR = new MySQLDbCreator(DATABASE_NAME, PATH_TO_SQL_SCRIPT, PATH_TO_TEST_PROPERTIES);
+	private static final MySQLDbCreator DBCREATOR = new MySQLDbCreator(PATH_TO_SQL_SCRIPT, PATH_TO_TEST_PROPERTIES);
 
 	@BeforeClass
 	public static void init() {

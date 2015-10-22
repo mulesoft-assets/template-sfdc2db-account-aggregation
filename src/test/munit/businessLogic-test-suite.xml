@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <munit:config name="munit" doc:name="MUnit configuration"/>
+    <spring:beans>
+        <spring:import resource="classpath:businessLogic.xml"/>
+        <spring:import resource="classpath:config.xml"/>
+        <spring:import resource="classpath:endpoints.xml"/>
+        <spring:import resource="classpath:errorHandling.xml"/>
+        <spring:bean name="mySQLDbCreator" class="org.mule.templates.db.MySQLDbCreator">
+        	<spring:constructor-arg index="0" value="src/main/resources/account.sql"/>
+        	<spring:constructor-arg index="1" value="./src/test/resources/mule.test.properties"/>
+        </spring:bean>
+        
+    </spring:beans>
+    <flow name="createAccountsSalesforce-suiteFlow">
+        <logger message="creating accounts in salesforce..." level="INFO" doc:name="Logger"/>
+        <dw:transform-message doc:name="Prepare Account">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+{
+	Name : "sfdc2db-account-migration-sf-munit"
+}]]></dw:set-payload>
+        </dw:transform-message>
+        <sfdc:create-single config-ref="Salesforce" type="Account" doc:name="Create Account in Salesforce">
+            <sfdc:object ref="#[payload]"/>
+        </sfdc:create-single>
+        <logger message="Create succesfull : #[payload]" level="INFO" doc:name="Log result"/>
+        <set-variable variableName="salesforceId" value="#[payload.id]" doc:name="Variable"/>
+        <set-session-variable variableName="salesforceId" value="#[payload.id]" doc:name="Session Variable"/>
+    </flow>
+    <flow name="createAccountsDatabase-suiteFlow">
+        <logger message="creating accounts in database..." level="INFO" doc:name="Logger"/>
+        <dw:transform-message doc:name="Prepare Account">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+{
+	Name: "sfdc2db-account-aggregation-db",
+	Id : "123456",
+	Industry : "Education",
+	Description : "Some account description"
+}]]></dw:set-payload>
+        </dw:transform-message>
+        <db:insert config-ref="Database" doc:name="Create Account in Database">
+            <db:parameterized-query><![CDATA[INSERT INTO Account (
+	Id,
+	AccountNumber,
+	AccountSource,
+	AnnualRevenue,
+	BillingCity,
+	BillingCountry,
+	BillingPostalCode,
+	BillingState,
+	BillingStreet,
+	Description,
+	Fax,
+	Industry,
+	LastModifiedDate,
+	Name,
+	NumberOfEmployees,
+	Ownership,
+	Phone,
+	Rating,
+	ShippingCity,
+	ShippingCountry,
+	ShippingPostalCode,
+	ShippingState,
+	ShippingStreet,
+	Sic,
+	SicDesc,
+	Site,
+	TickerSymbol,
+	Type,
+	Website
+) VALUES (
+	#[payload['Id']],
+	#[payload['AccountNumber']],
+	#[payload['AccountSource']],
+	#[payload['AnnualRevenue']],
+	#[payload['BillingCity']],
+	#[payload['BillingCountry']],
+	#[payload['BillingPostalCode']],
+	#[payload['BillingState']],
+	#[payload['BillingStreet']],
+	#[payload['Description']],
+	#[payload['Fax']],
+	#[payload['Industry']],
+	CURRENT_TIMESTAMP,
+	#[payload['Name']],
+	#[payload['NumberOfEmployees']],
+	#[payload['Ownership']],
+	#[payload['Phone']],
+	#[payload['Rating']],
+	#[payload['ShippingCity']],
+	#[payload['ShippingCountry']],
+	#[payload['ShippingPostalCode']],
+	#[payload['ShippingState']],
+	#[payload['ShippingStreet']],
+	#[payload['Sic']],
+	#[payload['SicDesc']],
+	#[payload['Site']],
+	#[payload['TickerSymbol']],
+	#[payload['Type']],
+	#[payload['Website']]
+)]]></db:parameterized-query>
+        </db:insert>
+        <logger message="Create database account succesfull : #[payload]" level="INFO" doc:name="Log result"/>
+    </flow>
+    <flow name="deleteAccountsSalesforce-suiteFlow">
+        <logger message="deleting accounts from salesforce.... #[flowVars['salesforceId']] and #[sessionVars['salesforceId']] " level="INFO" doc:name="Logger"/>
+        <sfdc:delete config-ref="Salesforce" doc:name="Delete Account by Id from Salesforce">
+            <sfdc:ids ref="#[flowVars['salesforceId']]"/>
+        </sfdc:delete>
+    </flow>
+    <munit:before-suite name="businessLogic-test-suiteBefore" description="Before suite actions">
+        <invoke object-ref="mySQLDbCreator" method="setUpDatabase" doc:name="Invoke"/>
+        <flow-ref name="createAccountsSalesforce-suiteFlow" doc:name="call createAccountsSalesforce-suiteFlow"/>
+        <flow-ref name="createAccountsDatabase-suiteFlow" doc:name="call createAccountsDatabase-suiteFlow"/>
+    </munit:before-suite>
+    <munit:after-suite name="businessLogic-test-suiteAfter" description="After suite actions">
+        <invoke object-ref="mySQLDbCreator" method="tearDownDataBase" doc:name="Invoke"/>
+        <flow-ref name="deleteAccountsSalesforce-suiteFlow" doc:name="deleteAccountsSalesforce-suiteFlow"/>
+    </munit:after-suite>
+    <munit:test name="new-test-suite-gatherDataFlowTest" description="Test">
+        <logger level="INFO" doc:name="Logger gatherDataFlow" message="gatherDataFlow"/>
+        <flow-ref name="gatherDataFlow" doc:name="gatherDataFlow"/>
+        <munit:assert-true message="Aggregation not succesfull" condition="#[payload.hasNext()]" doc:name="Assert True"/>
+    </munit:test>
+    <munit:test name="new-test-suite-formatOutputFlowTest" description="Test">
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+[
+{
+	IDInSalesforce : "0",
+	IDInDatabase : "",
+	Name : "SomeName_0",
+	IndustryInSalesforce : "industry_0_Salesforce",
+	IndustryInDatabase : ""
+	
+},
+{
+	IDInSalesforce : "1",
+	IDInDatabase : "1",
+	Name : "SomeName_1",
+	IndustryInSalesforce : "industry_1_Salesforce",
+	IndustryInDatabase : "industry_1_Database"
+	
+},
+{
+	IDInSalesforce : "",
+	IDInDatabase : "2",
+	Name : "SomeName_2",
+	IndustryInSalesforce : "",
+	IndustryInDatabase : "industry_2_Database"
+}]]]></dw:set-payload>
+            <dw:set-variable variableName="expectedVar"><![CDATA[%dw 1.0
+%output application/csv
+---
+[
+{
+	IDInSalesforce : "0",
+	IDInDatabase : "",
+	IndustryInSalesforce : "industry_0_Salesforce",
+	IndustryInDatabase : "",
+	Name : "SomeName_0",
+	NumberOfEmployeesInSalesforce : "",
+	NumberOfEmployeesInDatabase : ""	
+},
+{
+	IDInSalesforce : "",
+	IDInDatabase : "2",
+	IndustryInSalesforce : "",
+	IndustryInDatabase : "industry_2_Database",
+	Name : "SomeName_2",
+	NumberOfEmployeesInSalesforce : "",
+	NumberOfEmployeesInDatabase : ""
+},
+{
+	IDInSalesforce : "1",
+	IDInDatabase : "1",
+	IndustryInSalesforce : "industry_1_Salesforce",
+	IndustryInDatabase : "industry_1_Database",
+	Name : "SomeName_1",
+	NumberOfEmployeesInSalesforce : "",
+	NumberOfEmployeesInDatabase : ""
+	
+}
+]
+]]></dw:set-variable>
+        </dw:transform-message>
+
+        <flow-ref name="formatOutputFlow" doc:name="formatOutputFlow"/>
+        <object-to-string-transformer doc:name="Object to String"/>
+
+        <munit:assert-on-equals expectedValue="#[flowVars['expectedVar']]" actualValue="#[payload]" doc:name="Assert Equals"/>
+    </munit:test>
+</mule>
