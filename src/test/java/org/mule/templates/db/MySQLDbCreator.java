@@ -16,15 +16,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
-
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
 public class MySQLDbCreator {
 	private static final Logger LOG = LogManager.getLogger(MySQLDbCreator.class);
-	private String databaseName = "vlado";
+	private String databaseName;
 	private String databaseUrl;
 	private String databaseWithNameUrl;
 	private String pathToSqlScript;
@@ -46,7 +44,7 @@ public class MySQLDbCreator {
 		final String password = props.getProperty("database.password");
 		final String dbUrl = props.getProperty("database.url");
 		
-		this.setDatabaseName(databaseName);
+		this.databaseName = props.getProperty("database.name");
 		this.databaseUrl = dbUrl+"?user="+user+"&password="+password;
 		this.setDatabaseWithNameUrl(dbUrl+databaseName+"?rewriteBatchedStatements=true&user="+user+"&password="+password);
 	}
@@ -57,11 +55,11 @@ public class MySQLDbCreator {
 	
 	public void setUpDatabase() {
 		
+		initProperties();
+		
 		if(getDatabaseName() == null) {
 			throw new IllegalStateException("Database name not specified");
 		}
-		
-		initProperties();
 		
 		LOG.info("******************************** Populate MySQL DB **************************");
 		Connection conn = null;

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+<mule xmlns:mock="http://www.mulesoft.org/schema/mule/mock" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
 http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
 http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
-http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/mock/current/mule-mock.xsd">
     <munit:config name="munit" doc:name="MUnit configuration"/>
     <spring:beans>
         <spring:import resource="classpath:businessLogic.xml"/>
@@ -19,9 +20,9 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
         </spring:bean>
         
     </spring:beans>
-    <flow name="createAccountsSalesforce-suiteFlow">
-        <logger message="creating accounts in salesforce..." level="INFO" doc:name="Logger"/>
-        <dw:transform-message doc:name="Prepare Account">
+    <sub-flow name="createAccountsSalesforce-suiteFlow">
+        <logger message="creating accounts in salesforce..." level="INFO" doc:name="create Account in Salesforce Flow"/>
+        <dw:transform-message doc:name="prepare Account">
             <dw:set-payload><![CDATA[%dw 1.0
 %output application/java
 ---
@@ -29,27 +30,26 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 	Name : "sfdc2db-account-migration-sf-munit"
 }]]></dw:set-payload>
         </dw:transform-message>
-        <sfdc:create-single config-ref="Salesforce" type="Account" doc:name="Create Account in Salesforce">
+        <sfdc:create-single config-ref="Salesforce" type="Account" doc:name="create Account in Salesforce">
             <sfdc:object ref="#[payload]"/>
         </sfdc:create-single>
-        <logger message="Create succesfull : #[payload]" level="INFO" doc:name="Log result"/>
-        <set-variable variableName="salesforceId" value="#[payload.id]" doc:name="Variable"/>
-        <set-session-variable variableName="salesforceId" value="#[payload.id]" doc:name="Session Variable"/>
-    </flow>
-    <flow name="createAccountsDatabase-suiteFlow">
-        <logger message="creating accounts in database..." level="INFO" doc:name="Logger"/>
-        <dw:transform-message doc:name="Prepare Account">
+        <set-variable variableName="salesforceId" value="#[payload.id]" doc:name="set Salesforce Account Id"/>
+        <logger message="Create succesfull : #[payload]" level="INFO" doc:name="log result"/>
+    </sub-flow>
+    <sub-flow name="createAccountsDatabase-suiteFlow">
+        <logger message="creating accounts in database..." level="INFO" doc:name="create Account in Database Flow"/>
+        <dw:transform-message doc:name="prepare Account">
             <dw:set-payload><![CDATA[%dw 1.0
 %output application/java
 ---
 {
 	Name: "sfdc2db-account-aggregation-db",
-	Id : "123456",
+	Id : p('database.account.id'),
 	Industry : "Education",
 	Description : "Some account description"
 }]]></dw:set-payload>
         </dw:transform-message>
-        <db:insert config-ref="Database" doc:name="Create Account in Database">
+        <db:insert config-ref="Database" doc:name="create Account in Database">
             <db:parameterized-query><![CDATA[INSERT INTO Account (
 	Id,
 	AccountNumber,
@@ -112,30 +112,40 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 	#[payload['Website']]
 )]]></db:parameterized-query>
         </db:insert>
-        <logger message="Create database account succesfull : #[payload]" level="INFO" doc:name="Log result"/>
-    </flow>
-    <flow name="deleteAccountsSalesforce-suiteFlow">
-        <logger message="deleting accounts from salesforce.... #[flowVars['salesforceId']] and #[sessionVars['salesforceId']] " level="INFO" doc:name="Logger"/>
-        <sfdc:delete config-ref="Salesforce" doc:name="Delete Account by Id from Salesforce">
-            <sfdc:ids ref="#[flowVars['salesforceId']]"/>
+        <logger message="Create database account succesfull : #[payload]" level="INFO" doc:name="log result"/>
+    </sub-flow>
+    <sub-flow name="deleteAccountsSalesforce-suiteFlow">
+        <logger message="deleting accounts from salesforce.... #[flowVars['salesforceId']] and #[sessionVars['salesforceId']] " level="INFO" doc:name="delete Account in Salesforce Flow"/>
+        <sfdc:delete config-ref="Salesforce" doc:name="delete Account by Id from Salesforce">
+            <sfdc:ids >
+                <sfdc:id>#[flowVars['salesforceId']]</sfdc:id>
+            </sfdc:ids>
         </sfdc:delete>
-    </flow>
+    </sub-flow>
     <munit:before-suite name="businessLogic-test-suiteBefore" description="Before suite actions">
-        <invoke object-ref="mySQLDbCreator" method="setUpDatabase" doc:name="Invoke"/>
-        <flow-ref name="createAccountsSalesforce-suiteFlow" doc:name="call createAccountsSalesforce-suiteFlow"/>
+        <invoke object-ref="mySQLDbCreator" method="setUpDatabase" doc:name="Invoke - create database and tables"/>
         <flow-ref name="createAccountsDatabase-suiteFlow" doc:name="call createAccountsDatabase-suiteFlow"/>
     </munit:before-suite>
     <munit:after-suite name="businessLogic-test-suiteAfter" description="After suite actions">
-        <invoke object-ref="mySQLDbCreator" method="tearDownDataBase" doc:name="Invoke"/>
-        <flow-ref name="deleteAccountsSalesforce-suiteFlow" doc:name="deleteAccountsSalesforce-suiteFlow"/>
+        <invoke object-ref="mySQLDbCreator" method="tearDownDataBase" doc:name="Invoke - drop database"/>
     </munit:after-suite>
     <munit:test name="new-test-suite-gatherDataFlowTest" description="Test">
-        <logger level="INFO" doc:name="Logger gatherDataFlow" message="gatherDataFlow"/>
+        <logger level="INFO" doc:name="log gatherDataFlow" message="testing gatherDataFlow"/>
+        <flow-ref name="createAccountsSalesforce-suiteFlow" doc:name="createAccountsSalesforce-suiteFlow"/>
         <flow-ref name="gatherDataFlow" doc:name="gatherDataFlow"/>
-        <munit:assert-true message="Aggregation not succesfull" condition="#[payload.hasNext()]" doc:name="Assert True"/>
+        <dw:transform-message doc:name="filter payload for assertion">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload filter ($.IDInSalesforce == flowVars.salesforceId or $.IDInDatabase == p('database.account.id'))
+]]></dw:set-payload>
+        </dw:transform-message>
+        <munit:assert-true message="Aggregation not succesfull" condition="#[payload.size() == 2]" doc:name="Assert True"/>
+        <flow-ref name="deleteAccountsSalesforce-suiteFlow" doc:name="deleteAccountsSalesforce-suiteFlow"/>
     </munit:test>
     <munit:test name="new-test-suite-formatOutputFlowTest" description="Test">
-        <dw:transform-message doc:name="Transform Message">
+        <logger message="testing formatOutputFlow" level="INFO" doc:name="log formatOutputFlow"/>
+        <dw:transform-message doc:name="prepare input payload">
             <dw:set-payload><![CDATA[%dw 1.0
 %output application/java
 ---
