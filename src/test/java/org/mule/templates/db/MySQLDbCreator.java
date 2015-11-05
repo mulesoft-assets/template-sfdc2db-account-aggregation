@@ -26,8 +26,14 @@ public class MySQLDbCreator {
 	private String databaseUrl;
 	private String databaseWithNameUrl;
 	private String pathToSqlScript;
+	private String pathToProperties;
 	
-	public MySQLDbCreator(String databaseName, String pathToSqlScript, String pathToProperties){
+	public MySQLDbCreator(String pathToSqlScript, String pathToProperties){
+		this.pathToProperties = pathToProperties;
+		this.pathToSqlScript = pathToSqlScript;
+	}
+	
+	private void initProperties() {
 		final Properties props = new Properties();
 		try {
 			props.load(new FileInputStream(pathToProperties));
@@ -38,17 +44,22 @@ public class MySQLDbCreator {
 		final String password = props.getProperty("database.password");
 		final String dbUrl = props.getProperty("database.url");
 		
-		this.databaseName = databaseName;
-		this.pathToSqlScript = pathToSqlScript;
+		this.databaseName = props.getProperty("database.name");
 		this.databaseUrl = dbUrl+"?user="+user+"&password="+password;
-		this.databaseWithNameUrl = dbUrl+databaseName+"?rewriteBatchedStatements=true&user="+user+"&password="+password;
+		this.setDatabaseWithNameUrl(dbUrl+databaseName+"?rewriteBatchedStatements=true&user="+user+"&password="+password);
 	}
 	
 	public String getDatabaseUrlWithName(){
-		return databaseWithNameUrl;
+		return getDatabaseWithNameUrl();
 	}
 	
 	public void setUpDatabase() {
+		
+		initProperties();
+		
+		if(getDatabaseName() == null) {
+			throw new IllegalStateException("Database name not specified");
+		}
 		
 		LOG.info("******************************** Populate MySQL DB **************************");
 		Connection conn = null;
@@ -59,12 +70,12 @@ public class MySQLDbCreator {
 			// Get a connection
 			conn = DriverManager.getConnection(databaseUrl);
 			Statement stmt = conn.createStatement();
-			FileInputStream fstream = new FileInputStream(pathToSqlScript);
+			FileInputStream fstream = new FileInputStream(getPathToSqlScript());
 			DataInputStream in = new DataInputStream(fstream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
-			stmt.addBatch("CREATE DATABASE "+databaseName);
-			stmt.addBatch("USE "+databaseName);
+			stmt.addBatch("CREATE DATABASE "+getDatabaseName());
+			stmt.addBatch("USE "+getDatabaseName());
 
 			String strLine;
 			StringBuffer createStatement = new StringBuffer();
@@ -98,9 +109,35 @@ public class MySQLDbCreator {
 			conn = DriverManager.getConnection(databaseUrl);
 		
 			Statement stmt = conn.createStatement();
-			stmt.executeUpdate("DROP SCHEMA "+databaseName);
+			stmt.executeUpdate("DROP SCHEMA "+getDatabaseName());
 		} catch (Exception except) {
 			except.printStackTrace();
 		}
 	}
+
+	public String getDatabaseName() {
+		return databaseName;
+	}
+
+	public void setDatabaseName(String databaseName) {
+		this.databaseName = databaseName;
+	}
+	
+	public String getDatabaseWithNameUrl() {
+		return databaseWithNameUrl;
+	}
+
+	public void setDatabaseWithNameUrl(String databaseWithNameUrl) {
+		this.databaseWithNameUrl = databaseWithNameUrl;
+	}
+
+	public String getPathToSqlScript() {
+		return pathToSqlScript;
+	}
+	
+	public String getPathToProperties() {
+		return pathToProperties;
+	}
+
+
 }
