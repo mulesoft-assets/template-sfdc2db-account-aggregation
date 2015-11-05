@@ -111,6 +111,7 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
 	#[payload['Type']],
 	#[payload['Website']]
 )]]></db:parameterized-query>
+
         </db:insert>
         <logger message="Create database account succesfull : #[payload]" level="INFO" doc:name="log result"/>
     </sub-flow>
@@ -129,7 +130,7 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
     <munit:after-suite name="businessLogic-test-suiteAfter" description="After suite actions">
         <invoke object-ref="mySQLDbCreator" method="tearDownDataBase" doc:name="Invoke - drop database"/>
     </munit:after-suite>
-    <munit:test name="new-test-suite-gatherDataFlowTest" description="Test">
+    <munit:test name="businessLogic-suite-gatherDataFlowTest" description="Test">
         <logger level="INFO" doc:name="log gatherDataFlow" message="testing gatherDataFlow"/>
         <flow-ref name="createAccountsSalesforce-suiteFlow" doc:name="createAccountsSalesforce-suiteFlow"/>
         <flow-ref name="gatherDataFlow" doc:name="gatherDataFlow"/>
@@ -143,7 +144,7 @@ payload filter ($.IDInSalesforce == flowVars.salesforceId or $.IDInDatabase == p
         <munit:assert-true message="Aggregation not succesfull" condition="#[payload.size() == 2]" doc:name="Assert True"/>
         <flow-ref name="deleteAccountsSalesforce-suiteFlow" doc:name="deleteAccountsSalesforce-suiteFlow"/>
     </munit:test>
-    <munit:test name="new-test-suite-formatOutputFlowTest" description="Test">
+    <munit:test name="businessLogic-suite-formatOutputFlowTest" description="Test">
         <logger message="testing formatOutputFlow" level="INFO" doc:name="log formatOutputFlow"/>
         <dw:transform-message doc:name="prepare input payload">
             <dw:set-payload><![CDATA[%dw 1.0

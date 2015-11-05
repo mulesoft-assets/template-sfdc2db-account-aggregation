@@ -130,6 +130,7 @@
 			<url>https://repository.mulesoft.org/nexus/content/repositories/releases/</url>
 			<layout>default</layout>
 		</repository>
+		
 		<repository>
 			<id>mulesoft-snapshots</id>
 			<name>MuleSoft Snapshots Repository</name>
