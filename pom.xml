@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.mule.templates</groupId>
 		<artifactId>templates-tooling-parent-pom</artifactId>
-		<version>1.2.6</version>
+		<version>1.2.7</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -140,6 +140,6 @@
 	</repositories>
 <properties>
         <munit.version>1.0.0</munit.version>
-    <mule.munit.support.version>3.7.0</mule.munit.support.version>
+    	<mule.munit.support.version>3.7.0</mule.munit.support.version>
     </properties>
 </project>
