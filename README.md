@@ -34,6 +34,8 @@ This Template should serve as a foundation for extracting data from two systems,
 
 As implemented, it gets two accounts, one from Salesforce and other from Database instance. Then it compares by the name of the accounts, and generates a CSV file which shows accounts in A, accounts in B, and accounts in A and B. The report is then e-mailed to a configured group of e-mail addresses.
 
+The template is covered by the integration tests using the [MUnit](https://docs.mulesoft.com/mule-user-guide/v/3.7/munit). To be able to run the tests, see the example configuration of the test property file.
+
 # Considerations <a name="considerations"/>
 
 To make this Anypoint Template run, there are certain preconditions that must be considered. All of them deal with the preparations in both, that must be made in order for all to run smoothly. **Failling to do so could lead to unexpected behavior of the template.**
@@ -187,6 +189,38 @@ In order to use this Mule Anypoint Template you need to configure properties (Cr
 + mail.body `Please find attached your Accounts Report`
 + attachment.name `accounts_report.csv`
 
+### MUnit configuration
+Salesforce Connector configuration
++ sfdc.username `denis.mallki@mail.com`
++ sfdc.password `daLLk12m9`
++ sfdc.securityToken `2x59pklDdYWlWfqaPM9z1xHWG`
++ sfdc.url `https://login.salesforce.com/services/Soap/u/32.0`
+
+Database Test Connector configuration
++ db.jdbcUrl `jdbc:mysql://localhost:3306/mule?user=joan.baez&password=JoanBaez456`
++ db.driver `com.mysql.jdbc.Driver`
++ db.testuser.email `test@gmail.com`
+
+SMTP Test Services configuration
++ smtp.host `smtp.gmail.com`
++ smtp.port `587`
++ smtp.user `exampleuser@gmail.com`
++ smtp.password `ExamplePassword456`
+
+Test Mail details
++ mail.from `exampleuser@gmail.com`
++ mail.to `woody.guthrie@gmail.com`
++ mail.subject `Accounts Report`
++ mail.body `Please find attached your Accounts Report`
++ attachment.name `accounts_report.csv`
+
+Database Test Connector configuration for testing
++ database.url `jdbc:mysql://localhost:3306/`
++ database.user `test-user`
++ database.name `DATABASE_NAME`
++ database.password `password`
++ database.account.id `123456`
+
 # API Calls <a name="apicalls"/>
 Salesforce imposes limits on the number of API Calls that can be made. Therefore calculating this amount may be an important factor to consider. The Anypoint Template calls to the API can be calculated using the formula:
 
@@ -210,6 +244,7 @@ Here is a list of the main XML files you'll find in this application:
 * [endpoints.xml](#endpointsxml)
 * [businessLogic.xml](#businesslogicxml)
 * [errorHandling.xml](#errorhandlingxml)
+* [businessLogic-test-suite.xml](#businesslogictestxml)
 
 
 ## config.xml<a name="configxml"/>
@@ -262,11 +297,7 @@ This is the file where you will found the inbound and outbound sides of your int
 + Both SMTP Server configuration and the actual mail to be sent are defined in this endpoint.
 + This flow is going to be invoked from the flow that does all the functional work: *mainFlow*, the same that is invoked from the Inbound Flow upon triggering of the HTTP Endpoint.
 
-
-
 ## errorHandling.xml<a name="errorhandlingxml"/>
 This is the right place to handle how your integration will react depending on the different exceptions. 
 This file holds a [Choice Exception Strategy](http://www.mulesoft.org/documentation/display/current/Choice+Exception+Strategy) that is referenced by the main flow in the business logic.
-
-
 
