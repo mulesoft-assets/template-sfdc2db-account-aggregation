@@ -54,7 +54,7 @@ After this, to trigger the use case you just need to hit the local HTTP endpoint
 #### Database Connector configuration
 + db.jdbcUrl `jdbc:mysql://localhost:3306/mule?user=joan.baez&password=JoanBaez456`
 
-#### SMPT Services configuration
+#### SMTP Services configuration
 + smtp.host `smtp.gmail.com`
 + smtp.port `587`
 + smtp.user `exampleuser@gmail.com`

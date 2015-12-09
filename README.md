@@ -174,7 +174,7 @@ In order to use this Mule Anypoint Template you need to configure properties (Cr
 #### Database Connector configuration
 + db.jdbcUrl `jdbc:mysql://localhost:3306/mule?user=joan.baez&password=JoanBaez456`
 
-#### SMPT Services configuration
+#### SMTP Services configuration
 + smtp.host `smtp.gmail.com`
 + smtp.port `587`
 + smtp.user `exampleuser@gmail.com`
