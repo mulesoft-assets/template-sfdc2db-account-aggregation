@@ -1,0 +1,17 @@
+##
+## Pattern Aggregation beginning
+##
+## Main flow definition
+##
+#set( $exception_strategy = $fragment_element_label_default_choice_exception_strategy )
+#set( $main_flow = "#evaluate( $fragment_container_flow_aggregation_main )" )
+##
+## Gather data flow definition
+##
+#set( $gather_data_flow = "$fragment_container_flow_gather_data" )
+##
+## Format output flow definition
+#set( $format_output_flow = "$fragment_container_flow_format_output" )
+##
+## Business Logic composition (pattern argument)
+#evaluate( $fragment_pattern_aggregation_business_logic )

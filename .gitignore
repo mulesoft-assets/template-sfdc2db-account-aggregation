@@ -48,6 +48,11 @@ target/
 **/*.mflow
 
 # --------------- #
+# Fragments-specific #
+# --------------- #
+**/fragments/**
+
+# --------------- #
 # Mule-specific #
 # --------------- #
 .mule/
