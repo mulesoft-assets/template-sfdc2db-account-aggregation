@@ -3,5 +3,4 @@
     <name>template-sfdc2db-account-aggregation-1.2.5-SNAPSHOT</name>
     <description></description>
     <muleExtension name="Salesforce" qualifier="org.mule.tooling.ui.contribution.sfdc.3.5.0"/>
-    <muleExtension name="JiraRest" qualifier="org.mule.tooling.ui.contribution.jirarest.3.6.0"/>
 </mule-project>

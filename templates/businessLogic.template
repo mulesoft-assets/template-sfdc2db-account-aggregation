@@ -13,6 +13,7 @@
 #set( $gather_data_flow = "#evaluate( $fragment_container_flow_gather_data )" )
 ##
 ## Format output flow definition
+#set( $custom_sorting_transformer = $fragment_processors_custom_transformer_accounts )
 #set( $accounts_aggregation_mapping = $fragment_processors_processorgroup_accounts_mapping )
 #set( $format_output_flow = "#evaluate( $fragment_container_flow_format_output )" )
 ##

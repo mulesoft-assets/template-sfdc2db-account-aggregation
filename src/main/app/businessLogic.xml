@@ -50,7 +50,11 @@ This flow should control the direction of the application, and it should be call
 
 		
 <flow name="formatOutputFlow" processingStrategy="synchronous">
-        <custom-transformer class="org.mule.templates.transformers.SortAccountList" doc:name="Custom component to sort accounts list"/>
+		
+		
+		<custom-transformer class="org.mule.templates.transformers.SortAccountList" doc:name="Custom component to sort accounts list"/>
+		
+		
 		
 		
 		<dw:transform-message doc:name="Map Collection to CSV">
