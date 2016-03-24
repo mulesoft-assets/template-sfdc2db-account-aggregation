@@ -8,10 +8,13 @@
 ##
 ## Gather data flow definition
 ##
-#set( $gather_data_flow = "$fragment_container_flow_gather_data" )
+#set( $sfdc_query_entities = $fragment_processors_processorgroup_sfdc_query_accounts )
+#set( $db_query_entities = $fragment_processors_processorgroup_db_query_accounts )
+#set( $gather_data_flow = "#evaluate( $fragment_container_flow_gather_data )" )
 ##
 ## Format output flow definition
-#set( $format_output_flow = "$fragment_container_flow_format_output" )
+#set( $accounts_aggregation_mapping = $fragment_processors_processorgroup_accounts_mapping )
+#set( $format_output_flow = "#evaluate( $fragment_container_flow_format_output )" )
 ##
 ## Business Logic composition (pattern argument)
 #evaluate( $fragment_pattern_aggregation_business_logic )
