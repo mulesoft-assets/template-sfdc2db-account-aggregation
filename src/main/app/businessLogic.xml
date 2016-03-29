@@ -37,6 +37,8 @@ This flow should control the direction of the application, and it should be call
 		
 		
 			
+			
+			
 		
 		<db:select config-ref="Database" doc:name="query all accounts from Database">
                 <db:parameterized-query><![CDATA[SELECT Id, AccountNumber, Description, Industry, Name, CAST(NumberOfEmployees AS CHAR) NumberOfEmployees FROM Account]]></db:parameterized-query>
