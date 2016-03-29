@@ -8,8 +8,8 @@
 ##
 ## Gather data flow definition
 ##
-#set( $sfdc_query_entities_src = $fragment_processors_processorgroup_sfdc_query_accounts )
-#set( $db_query_entities_dst = $fragment_processors_processorgroup_db_query_accounts )
+#set( $sfdc_query_entities_src = $fragment_processors_processorgroup_sfdc_query_accounts_src )
+#set( $db_query_entities_dst = $fragment_processors_processorgroup_db_query_accounts_dst )
 #set( $gather_data_flow = "#evaluate( $fragment_container_flow_gather_data )" )
 ##
 ## Format output flow definition
