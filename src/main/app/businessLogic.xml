@@ -33,11 +33,9 @@ This flow should control the direction of the application, and it should be call
             <custom-aggregation-strategy class="org.mule.templates.transformers.AccountMergeAggregationStrategy"/>
 			
 		
-		<sfdc:query config-ref="SalesforceA" query="dsql:SELECT Id,AccountNumber,Description,Industry,Name,NumberOfEmployees FROM Account" doc:name="query all accounts from SalesForce"/>
+		<sfdc:query config-ref="SalesforceA" query="dsql:SELECT Id,AccountNumber,Description,Industry,Name,NumberOfEmployees FROM Account" doc:name="query all accounts from Salesforce instance A"/>
 		
 		
-			
-			
 			
 		
 		<db:select config-ref="Database" doc:name="query all accounts from Database">
