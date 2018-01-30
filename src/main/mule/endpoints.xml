@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="triggerFlow" doc:id="32f1372d-3cdf-41ff-ae84-f4a4d241f2c8">
+		<http:listener doc:name="Listener"
+			doc:id="3a74cef5-205e-467f-9a60-747be7573831" path="/generatereport"
+			config-ref="HTTP_Listener_config" />
+		<flow-ref doc:name="mainFlow" doc:id="69c1b43a-95fa-4d79-99bc-b3fa3c408d3d"
+			name="mainFlow" />
+	</flow>
+</mule>

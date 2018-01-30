@@ -1,0 +1,22 @@
+{
+  "configs": [
+    "config.xml",
+    "endpoints.xml",
+    "errorHandling.xml",
+    "bussinessLogic.xml"
+  ],
+  "redeploymentEnabled": true,
+  "name": "template-sfdc2db-account-aggregation",
+  "minMuleVersion": "4.0.0",
+  "requiredProduct": "MULE_EE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedResources": []
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}
