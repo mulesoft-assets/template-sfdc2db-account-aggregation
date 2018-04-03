@@ -11,8 +11,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
 	<flow name="mainFlow" doc:id="c9d80d54-ed92-4dc2-872f-629f3c0b678f">
-		<flow-ref doc:name="bussinesslogicFlow" doc:id="7e1b3d52-2256-4af8-b0c5-b8fbee3d1b66"
-			name="bussinesslogicFlow" />
+		<flow-ref doc:name="businessLogicFlow" doc:id="7e1b3d52-2256-4af8-b0c5-b8fbee3d1b66" name="businessLogicFlow"/>
 		<error-handler>
 			<on-error-propagate enableNotifications="true"
 				logException="true" doc:name="On Error Propagate" doc:id="488b507d-e26c-4c56-8759-8bb4f6645d71"
@@ -22,7 +21,7 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 			</on-error-propagate>
 		</error-handler>
 	</flow>
-	<flow name="bussinesslogicFlow" doc:id="40b0863d-64d1-4b34-a995-9a3783fb911e">
+	<flow name="businessLogicFlow" doc:id="40b0863d-64d1-4b34-a995-9a3783fb911e">
 		<scatter-gather doc:name="Scatter-Gather"
 			doc:id="895d0dd7-fe8c-47c9-9120-81fad608bef2">
 			<route>

@@ -41,6 +41,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		doc:id="233e532c-8296-4ddd-ac67-e2b7984b3609">
 		<tls:trust-store insecure="true" />
 	</tls:context>
+	
 	<configuration-properties file="mule.${mule.env}.properties" doc:name="Configuration 
 		properties" doc:id="46877740-aac5-4812-8728-4718689aa9ec" />
 	<configuration-properties file="common.properties"
