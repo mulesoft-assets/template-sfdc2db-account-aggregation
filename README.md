@@ -1,5 +1,5 @@
 
-# Template: Salesforce and database Account Aggregation
+# Template: Salesforce and Database Account Aggregation
 
 Aggregates accounts from Salesforce and a database into a CSV file. This basic pattern can be modified to collect from more or different sources, and to produce formats other than CSV. You can trigger this manually or programmatically with an HTTP call.
 
